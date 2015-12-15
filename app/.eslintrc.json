@@ -15,15 +15,16 @@
         "semi": [
             2,
             "never"
+        ],
+        "strict": [
+            2,
+            "global"
         ]
     },
     "env": {
         "es6": true,
         "node": true,
         "mocha": true
-    },
-    "ecmaFeatures": {
-        "modules": true
     },
     "extends": "eslint:recommended"
 }
