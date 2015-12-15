@@ -1,0 +1,16 @@
+{
+  "name": "es-bueno",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.13.3",
+    "mocha": "^2.3.4",
+    "supertest": "^1.1.0"
+  }
+}

@@ -1,0 +1,15 @@
+base:
+  image: ihsw/es-bueno
+test-base:
+  extends:
+    service: base
+  command: npm test
+
+test:
+  extends:
+    service: test-base
+test-dev:
+  extends:
+    service: test-base
+  volumes:
+    - ./app:/srv/app
