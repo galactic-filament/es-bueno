@@ -3,6 +3,8 @@ db:
 
 base:
   image: ihsw/es-bueno
+  environment:
+    - ENV=local
 test-base:
   extends:
     service: base

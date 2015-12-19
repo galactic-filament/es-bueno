@@ -2,8 +2,13 @@ sudo: false
 language: node_js
 node_js:
   - 4.1
+services:
+  - postgresql
 
+env:
+  - ENV=travis
 before_install:
+  - psql -f ./db/container-files/docker-entrypoint-initdb.d/db.sql -U postgres
   - cd ./app
 before_script:
   - npm install --silent mocha

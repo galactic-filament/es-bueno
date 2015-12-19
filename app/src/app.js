@@ -3,8 +3,12 @@ let express = require('express')
 let bodyParser = require('body-parser')
 let Sequelize = require('sequelize')
 
+let dbHost = 'db'
+if (process.env['ENV'] === 'travis') {
+  dbHost = 'localhost'
+}
 let sequelize = new Sequelize('postgres', 'postgres', '', {
-  host: 'db',
+  host: dbHost,
   dialect: 'postgres',
   logging: false
 })
