@@ -1,3 +1,4 @@
 #! /bin/bash
 
-docker build -t ihsw/es-bueno .
+docker build -t ihsw/es-bueno . \
+  && docker build -t ihsw/es-bueno-db ./db

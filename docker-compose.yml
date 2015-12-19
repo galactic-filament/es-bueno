@@ -1,3 +1,6 @@
+db:
+  image: ihsw/es-bueno-db
+
 base:
   image: ihsw/es-bueno
 test-base:
@@ -8,8 +11,12 @@ test-base:
 test:
   extends:
     service: test-base
+  links:
+    - db
 test-dev:
   extends:
     service: test-base
   volumes:
     - ./app:/srv/app
+  links:
+    - db

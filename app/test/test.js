@@ -41,3 +41,18 @@ describe('Json reflection', () => {
       })
   })
 })
+describe('Post creation endpoint', () => {
+  it('Should return the new post\'s id', (done) => {
+    let body = { body: 'Hello, world!' }
+    request(app)
+      .post('/posts')
+      .send(body)
+      .end((err, res) => {
+        assert.equal(err, null)
+        assert.equal(200, res.status)
+        assert.equal('id' in res.body, true)
+        assert.equal(typeof res.body.id === 'number', true)
+        done()
+      })
+  })
+})
