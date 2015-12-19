@@ -8,7 +8,7 @@ base:
 test-base:
   extends:
     service: base
-  command: npm test
+  command: ./bin/run-tests
 
 test:
   extends:
