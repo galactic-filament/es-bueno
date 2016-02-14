@@ -3,6 +3,19 @@ let assert = require('assert')
 let request = require('supertest')
 let app = require('../src/app')
 
+let createPost = (body, cb) => {
+  request(app)
+    .post('/posts')
+    .send(body)
+    .end((err, res) => {
+      assert.equal(err, null)
+      assert.equal(200, res.status, res.text)
+      assert.equal('id' in res.body, true)
+      assert.equal(typeof res.body.id === 'number', true)
+      cb(res.body)
+    })
+}
+
 describe('Homepage', () => {
   it('Should return standard greeting', (done) => {
     request(app)
@@ -44,15 +57,23 @@ describe('Json reflection', () => {
 describe('Post creation endpoint', () => {
   it('Should return the new post\'s id', (done) => {
     let body = { body: 'Hello, world!' }
-    request(app)
-      .post('/posts')
-      .send(body)
-      .end((err, res) => {
-        assert.equal(err, null)
-        assert.equal(200, res.status)
-        assert.equal('id' in res.body, true)
-        assert.equal(typeof res.body.id === 'number', true)
-        done()
-      })
+    createPost(body, () => {
+      done()
+    })
+  })
+})
+describe('Post endpoint', () => {
+  it('Should return a post', (done) => {
+    let body = { body: 'Hello, world!' }
+    createPost(body, (post) => {
+      request(app)
+        .get(`/post/${post.id}`)
+        .end((err, res) => {
+          assert.equal(err, null)
+          assert.equal(200, res.status)
+          assert.equal(body.body, res.body.body)
+          done()
+        })
+    })
   })
 })

@@ -10,13 +10,16 @@ if (process.env['ENV'] === 'travis') {
 let sequelize = new Sequelize('postgres', 'postgres', '', {
   host: dbHost,
   dialect: 'postgres',
-  logging: false
+  logging: false,
+  define: {
+    timestamps: false
+  }
 })
 
 let app = express()
 app.use(bodyParser.json())
 
-let Post = sequelize.define('Post', {
+let Post = sequelize.define('post', {
   body: Sequelize.STRING
 })
 
@@ -30,12 +33,17 @@ app.post('/reflection', (req, res) => {
   res.send(req.body)
 })
 app.post('/posts', (req, res) => {
-  sequelize.sync().then(() => {
-    return Post.create({
-      body: res.body
-    })
+  Post.create({
+    body: req.body.body
   }).then((post) => {
     res.send({ id: post.id })
+  }).catch((err) => {
+    res.status(500).send(err.message)
+  })
+})
+app.get('/post/:id', (req, res) => {
+  Post.findById(req.params.id).then((post) => {
+    res.send(post)
   })
 })
 
