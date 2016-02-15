@@ -46,5 +46,14 @@ app.get('/post/:id', (req, res) => {
     res.send(post)
   })
 })
+app.delete('/post/:id', (req, res) => {
+  Post.findById(req.params.id).then((post) => {
+    Post.destroy({
+      where: { id: post.id }
+    }).then(() => {
+      res.send({})
+    })
+  })
+})
 
 module.exports = app

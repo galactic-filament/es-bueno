@@ -76,4 +76,16 @@ describe('Post endpoint', () => {
         })
     })
   })
+  it('Should delete a post', (done) => {
+    let body = { body: 'Hello, world!' }
+    createPost(body, (post) => {
+      request(app)
+        .delete(`/post/${post.id}`)
+        .end((err, res) => {
+          assert.equal(err, null)
+          assert.equal(200, res.status)
+          done()
+        })
+    })
+  })
 })
