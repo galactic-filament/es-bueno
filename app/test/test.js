@@ -88,4 +88,19 @@ describe('Post endpoint', () => {
         })
     })
   })
+  it('Should update a post', (done) => {
+    let createBody = { body: 'Hello, world!' }
+    createPost(createBody, (post) => {
+      let putBody = { body: 'Jello, world!' }
+      request(app)
+        .put(`/post/${post.id}`)
+        .send(putBody)
+        .end((err, res) => {
+          assert.equal(err, null)
+          assert.equal(200, res.status)
+          assert.equal(putBody.body, res.body.body)
+          done()
+        })
+    })
+  })
 })
