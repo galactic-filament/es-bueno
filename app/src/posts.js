@@ -1,6 +1,7 @@
 'use strict'
 let express = require('express')
 let Sequelize = require('sequelize')
+let HTTPStatus = require('http-status')
 
 let router = express.Router()
 
@@ -11,7 +12,7 @@ let getRouter = (sequelize) => {
 
   router.post('/posts', (req, res) => {
     Post.create({ body: req.body.body }).then(
-      (post) => res.send({ id: post.id })
+      (post) => res.status(HTTPStatus.CREATED).send({ id: post.id })
     ).catch((err) => res.status(500).send(err.message))
   })
   router.get('/post/:id', (req, res) => {

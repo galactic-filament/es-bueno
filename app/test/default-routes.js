@@ -2,15 +2,16 @@
 let assert = require('assert')
 let request = require('supertest')
 let app = require('../src/app')
+let HTTPStatus = require('http-status')
 
 describe('Homepage', () => {
   it('Should return standard greeting', (done) => {
     request(app)
       .get('/')
-      .end((err, res) => {
+      .expect(HTTPStatus.OK)
+      .expect('Hello, world!')
+      .end((err) => {
         assert.equal(err, null)
-        assert.equal(200, res.status)
-        assert.equal('Hello, world!', res.text)
         done()
       })
   })
@@ -19,10 +20,10 @@ describe('Ping endpoint', () => {
   it('Should respond to standard ping', (done) => {
     request(app)
       .get('/ping')
-      .end((err, res) => {
+      .expect(HTTPStatus.OK)
+      .expect('Pong')
+      .end((err) => {
         assert.equal(err, null)
-        assert.equal(200, res.status)
-        assert.equal('Pong', res.text)
         done()
       })
   })
@@ -33,9 +34,9 @@ describe('Json reflection', () => {
     request(app)
       .post('/reflection')
       .send(body)
+      .expect(HTTPStatus.OK)
       .end((err, res) => {
         assert.equal(err, null)
-        assert.equal(200, res.status)
         assert.equal(body.greeting, res.body.greeting)
         done()
       })

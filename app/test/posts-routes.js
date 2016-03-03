@@ -2,14 +2,15 @@
 let assert = require('assert')
 let request = require('supertest')
 let app = require('../src/app')
+let HTTPStatus = require('http-status')
 
 let createPost = (body, cb) => {
   request(app)
     .post('/posts')
     .send(body)
+    .expect(HTTPStatus.CREATED)
     .end((err, res) => {
       assert.equal(err, null)
-      assert.equal(200, res.status, res.text)
       assert.equal('id' in res.body, true)
       assert.equal(typeof res.body.id === 'number', true)
       cb(res.body)
@@ -28,9 +29,9 @@ describe('Post endpoint', () => {
     createPost(body, (post) => {
       request(app)
         .get(`/post/${post.id}`)
+        .expect(HTTPStatus.OK)
         .end((err, res) => {
           assert.equal(err, null)
-          assert.equal(200, res.status)
           assert.equal(body.body, res.body.body)
           done()
         })
@@ -41,9 +42,9 @@ describe('Post endpoint', () => {
     createPost(body, (post) => {
       request(app)
         .delete(`/post/${post.id}`)
-        .end((err, res) => {
+        .expect(HTTPStatus.OK)
+        .end((err) => {
           assert.equal(err, null)
-          assert.equal(200, res.status)
           done()
         })
     })
@@ -55,9 +56,9 @@ describe('Post endpoint', () => {
       request(app)
         .put(`/post/${post.id}`)
         .send(putBody)
+        .expect(HTTPStatus.OK)
         .end((err, res) => {
           assert.equal(err, null)
-          assert.equal(200, res.status)
           assert.equal(putBody.body, res.body.body)
           done()
         })
