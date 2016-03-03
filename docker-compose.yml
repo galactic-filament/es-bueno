@@ -10,6 +10,14 @@ test-base:
     service: base
   command: ./bin/run-tests
 
+web-dev:
+  extends:
+    service: base
+  volumes:
+    - ./app:/srv/app
+  links:
+    - db
+
 web-test:
   extends:
     service: base
