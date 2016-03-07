@@ -12,3 +12,5 @@ before_install:
   - cd ./app
 before_script:
   - npm install --silent mocha
+after_success:
+  - coveralls
