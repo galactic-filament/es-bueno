@@ -10,10 +10,7 @@ let app = express()
 app.use(bodyParser.json())
 
 // db init
-let dbHost = 'db'
-if (process.env['ENV'] === 'travis') {
-  dbHost = 'localhost'
-}
+let dbHost = process.env['DATABASE_HOST']
 let sequelize = new Sequelize('postgres', 'postgres', '', {
   host: dbHost,
   dialect: 'postgres',

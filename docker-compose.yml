@@ -4,35 +4,21 @@ db:
 base:
   image: ihsw/es-bueno
   environment:
-    - ENV=local
+    - DATABASE_HOST=Db
 test-base:
   extends:
     service: base
   command: ./bin/run-tests
 
-web-dev:
-  extends:
-    service: base
-  volumes:
-    - ./app:/srv/app
-  links:
-    - db
-
-web-test:
-  extends:
-    service: base
-  links:
-    - db
-
 test:
   extends:
     service: test-base
   links:
-    - db
+    - db:Db
 test-dev:
   extends:
     service: test-base
   volumes:
     - ./app:/srv/app
   links:
-    - db
+    - db:Db
