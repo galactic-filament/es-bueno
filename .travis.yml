@@ -18,4 +18,4 @@ before_install:
 before_script:
 - npm install --silent mocha
 after_success:
-- ../bin/docker-push ihsw/pho-sho
+- ../bin/docker-push ihsw/es-bueno
