@@ -1,7 +1,9 @@
 sudo: required
 language: node_js
 node_js:
-- 4.1
+- 0.12
+- 4.2
+- 5.1
 services:
 - postgresql
 - docker
@@ -19,4 +21,4 @@ before_install:
 before_script:
 - npm install --silent mocha
 after_success:
-- ../bin/docker-push ihsw/es-bueno
+- test $TRAVIS_NODE_VERSION == "5.1" && ../bin/docker-push ihsw/es-bueno
