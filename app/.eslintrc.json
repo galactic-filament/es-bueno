@@ -19,6 +19,12 @@
         "strict": [
             2,
             "global"
+        ],
+        "prefer-const": [
+            2
+        ],
+        "no-const-assign": [
+            2
         ]
     },
     "env": {

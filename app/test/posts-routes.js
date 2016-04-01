@@ -1,10 +1,10 @@
 'use strict'
-let assert = require('assert')
-let request = require('supertest')
-let app = require('../src/app')
-let HTTPStatus = require('http-status')
+const assert = require('assert')
+const request = require('supertest')
+const app = require('../src/app')
+const HTTPStatus = require('http-status')
 
-let createPost = (body, cb) => {
+const createPost = (body, cb) => {
   request(app)
     .post('/posts')
     .send(body)
@@ -19,13 +19,13 @@ let createPost = (body, cb) => {
 
 describe('Post creation endpoint', () => {
   it('Should return the new post\'s id', (done) => {
-    let body = { body: 'Hello, world!' }
+    const body = { body: 'Hello, world!' }
     createPost(body, () => done())
   })
 })
 describe('Post endpoint', () => {
   it('Should return a post', (done) => {
-    let body = { body: 'Hello, world!' }
+    const body = { body: 'Hello, world!' }
     createPost(body, (post) => {
       request(app)
         .get(`/post/${post.id}`)
@@ -38,7 +38,7 @@ describe('Post endpoint', () => {
     })
   })
   it('Should delete a post', (done) => {
-    let body = { body: 'Hello, world!' }
+    const body = { body: 'Hello, world!' }
     createPost(body, (post) => {
       request(app)
         .delete(`/post/${post.id}`)
@@ -50,9 +50,9 @@ describe('Post endpoint', () => {
     })
   })
   it('Should update a post', (done) => {
-    let createBody = { body: 'Hello, world!' }
+    const createBody = { body: 'Hello, world!' }
     createPost(createBody, (post) => {
-      let putBody = { body: 'Jello, world!' }
+      const putBody = { body: 'Jello, world!' }
       request(app)
         .put(`/post/${post.id}`)
         .send(putBody)

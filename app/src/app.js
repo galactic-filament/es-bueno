@@ -1,17 +1,17 @@
 'use strict'
-let express = require('express')
-let bodyParser = require('body-parser')
-let Sequelize = require('sequelize')
-let defaultRouter = require('./default')
-let postsRouter = require('./posts')
+const express = require('express')
+const bodyParser = require('body-parser')
+const Sequelize = require('sequelize')
+const defaultRouter = require('./default')
+const postsRouter = require('./posts')
 
 // express init
-let app = express()
+const app = express()
 app.use(bodyParser.json())
 
 // db init
-let dbHost = process.env['DATABASE_HOST']
-let sequelize = new Sequelize('postgres', 'postgres', '', {
+const dbHost = process.env['DATABASE_HOST']
+const sequelize = new Sequelize('postgres', 'postgres', '', {
   host: dbHost,
   dialect: 'postgres',
   logging: false,

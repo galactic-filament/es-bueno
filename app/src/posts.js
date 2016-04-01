@@ -1,12 +1,12 @@
 'use strict'
-let express = require('express')
-let Sequelize = require('sequelize')
-let HTTPStatus = require('http-status')
+const express = require('express')
+const Sequelize = require('sequelize')
+const HTTPStatus = require('http-status')
 
-let router = express.Router()
+const getRouter = (sequelize) => {
+  const router = express.Router()
 
-let getRouter = (sequelize) => {
-  let Post = sequelize.define('post', {
+  const Post = sequelize.define('post', {
     body: Sequelize.STRING
   })
 

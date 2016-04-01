@@ -1,8 +1,7 @@
 'use strict'
-let express = require('express')
+const express = require('express')
 
-let router = express.Router()
-
+const router = express.Router()
 router.get('/', (req, res) => {
   res.set('Content-type', 'text/plain').send('Hello, world!')
 })

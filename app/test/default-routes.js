@@ -1,8 +1,8 @@
 'use strict'
-let assert = require('assert')
-let request = require('supertest')
-let app = require('../src/app')
-let HTTPStatus = require('http-status')
+const assert = require('assert')
+const request = require('supertest')
+const app = require('../src/app')
+const HTTPStatus = require('http-status')
 
 describe('Homepage', () => {
   it('Should return standard greeting', (done) => {
@@ -30,7 +30,7 @@ describe('Ping endpoint', () => {
 })
 describe('Json reflection', () => {
   it('Should return identical Json in response as provided by request', (done) => {
-    let body = { greeting: 'Hello, world!' }
+    const body = { greeting: 'Hello, world!' }
     request(app)
       .post('/reflection')
       .send(body)

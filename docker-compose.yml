@@ -22,3 +22,11 @@ test-dev:
     - db:Db
   volumes:
     - ./app:/srv/app
+
+web:
+  extends:
+    service: base
+  links:
+    - db:Db
+  ports:
+    - 80:80
