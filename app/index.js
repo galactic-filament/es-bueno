@@ -1,5 +1,5 @@
 'use strict'
-const app = require('./src/app')
+let app = require('./src/app')
 
 const server = app.listen(80)
 process.on('SIGTERM', () => {

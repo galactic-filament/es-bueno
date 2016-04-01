@@ -19,5 +19,6 @@ before_install:
 - cd ./app
 before_script:
 - npm install --silent mocha
+- eslint .
 after_success:
 - test $TRAVIS_NODE_VERSION == "5.1" && ../bin/docker-push ihsw/es-bueno
