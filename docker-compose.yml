@@ -5,6 +5,7 @@ base:
   image: ihsw/es-bueno
   environment:
     - DATABASE_HOST=Db
+    - REQUEST_LOGGING=true
 test-base:
   extends:
     service: base
