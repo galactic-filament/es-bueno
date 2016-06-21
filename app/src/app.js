@@ -6,6 +6,9 @@ const defaultRouter = require('./default')
 const postsRouter = require('./posts')
 const winston = require('winston')
 
+// logging config
+winston.add(winston.transports.File, { filename: '/var/log/app.log' })
+
 // express init
 const app = express()
 app.use(bodyParser.json())

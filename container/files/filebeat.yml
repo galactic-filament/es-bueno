@@ -1,0 +1,10 @@
+filebeat:
+  prospectors:
+  -
+    paths:
+    - /var/log/app.log
+output:
+  console:
+    pretty: true
+  logstash:
+    hosts: ["FilebeatEgress:5044"]
