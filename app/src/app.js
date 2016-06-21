@@ -8,6 +8,7 @@ const winston = require('winston')
 
 // logging config
 winston.add(winston.transports.File, { filename: '/var/log/app.log' })
+winston.remove(winston.transports.Console)
 
 // express init
 const app = express()
