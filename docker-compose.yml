@@ -21,6 +21,8 @@ test-dev:
     service: test-base
   links:
     - db:Db
+  external_links:
+    - elk-server:log-egress
   volumes:
     - ./app:/srv/app
 
