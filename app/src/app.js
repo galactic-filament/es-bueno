@@ -7,19 +7,17 @@ const postsRouter = require('./posts')
 const winston = require('winston')
 require('winston-logstash')
 
-// logging config
-winston.remove(winston.transports.Console)
-const logger = new winston.Logger({
-  transports: [
-    new winston.transports.File({ filename: '/var/log/app.log' }),
-    new winston.transports.Logstash({ host: 'log-egress', port: 8080 })
-  ]
-})
-
 // express init
 const app = express()
 app.use(bodyParser.json())
+
+// logging config
+winston.remove(winston.transports.Console)
+const logger = new winston.Logger({
+  transports: [new winston.transports.File({ filename: '/var/log/app.log' })]
+})
 if (process.env['REQUEST_LOGGING']) {
+  winston.add(winston.transports.Logstash, { host: 'log-egress', port: 8080 })
   app.use((req, res, next) => {
     logger.info('Url hit', {
       contentType: req.header('content-type'),
