@@ -5,13 +5,14 @@ const Sequelize = require('sequelize')
 const defaultRouter = require('./default')
 const postsRouter = require('./posts')
 const winston = require('winston')
+require('winston-logstash')
 
 // logging config
 winston.remove(winston.transports.Console)
 const logger = new winston.Logger({
   transports: [
     new winston.transports.File({ filename: '/var/log/app.log' }),
-    new winston.transports.Http({ host: 'log-egress', port: 8080 })
+    new winston.transports.Logstash({ host: 'log-egress', port: 8080 })
   ]
 })
 
