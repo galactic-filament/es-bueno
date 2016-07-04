@@ -12,12 +12,9 @@ const app = express()
 app.use(bodyParser.json())
 
 // logging config
-const transports = [
-  // new winston.transports.Console(),
-  new winston.transports.File({ filename: '/var/log/app.log' }),
-]
+const transports = [new winston.transports.File({ filename: '/var/log/app.log' })]
 if (process.env['REQUEST_LOGGING']) {
-  transports.push(new winston.transports.LogstashUDP({ host: 'log-egress', port: 8070 }))
+  transports.push(new winston.transports.LogstashUDP({ appName: 'es-bueno', host: 'log-egress', port: 8070 }))
 }
 const logger = new winston.Logger({ transports: transports })
 
