@@ -37,7 +37,7 @@ test("Json reflection Should return identical Json in response as provided by re
     .expect(HTTPStatus.OK)
     .end((err: Error, res: supertest.Response) => {
         t.equal(err, null, `POST ${url} err was not null`);
-        t.equal(body.greeting, res.body.greeting);
+        t.equal(body.greeting, res.body.greeting, "Greetings in request and response match");
         t.end();
     });
 });
