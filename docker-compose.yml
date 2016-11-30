@@ -5,7 +5,7 @@ base:
   image: ihsw/es-bueno
   environment:
     - DATABASE_HOST=Db
-    - REQUEST_LOGGING=true
+    - REQUEST_LOGGING=1
 test-base:
   extends:
     service: base
@@ -21,8 +21,8 @@ test-dev:
     service: test-base
   links:
     - db:Db
-  external_links:
-    - elk-server:log-egress
+  # external_links:
+    # - elk-server:log-egress
   volumes:
     - ./app:/srv/app
 

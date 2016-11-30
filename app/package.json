@@ -2,24 +2,31 @@
   "name": "es-bueno",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "./dist/index.js",
   "scripts": {
-    "test": "mocha"
+    "build": "tsc --noUnusedParameters --noUnusedLocals && echo built",
+    "lint": "tslint ./test/**/*.ts ./src/**/*.ts && echo linted",
+    "test": "tape ./dist/test/**/*.js | tap-spec",
+    "typings": "typings",
+    "tap-spec": "tap-spec"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "body-parser": "^1.14.1",
-    "express": "^4.13.3",
-    "mocha": "^2.3.4",
-    "pg": "^4.4.3",
-    "sequelize": "^3.15.0",
-    "supertest": "^1.1.0",
-    "winston": "^2.2.0",
+    "body-parser": "^1.15.2",
+    "express": "^4.14.0",
+    "http-status": "^0.2.3",
+    "pg": "^6.1.0",
+    "sequelize": "^3.27.0",
+    "winston": "^2.3.0",
     "winston-logstash-udp": "^0.1.1"
   },
   "devDependencies": {
-    "eslint": "^2.5.3",
-    "http-status": "^0.2.0"
+    "supertest": "^2.0.1",
+    "tap-spec": "^4.1.1",
+    "tape": "^4.6.3",
+    "tslint": "^4.0.2",
+    "typescript": "^2.0.10",
+    "typings": "^2.0.0"
   }
 }
