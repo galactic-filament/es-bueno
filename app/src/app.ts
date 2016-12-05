@@ -7,6 +7,7 @@ import * as Sequelize from "sequelize";
 import { router as defaultRouter } from "./default";
 import { getRouter as postsRouter } from "./posts";
 import * as winston from "winston";
+import * as HTTPStatus from "http-status";
 
 // express init
 export const app = express();
@@ -38,4 +39,17 @@ const sequelize = new Sequelize("postgres", "postgres", "", <Sequelize.Options>{
 
 // route init
 app.use("/", defaultRouter);
-app.use("/", postsRouter(sequelize));
+app.use("/", postsRouter(sequelize, logger));
+
+// error logging
+app.use((err: Error, req: Request & ParsedAsJson, res: Response, next: Function) => {
+  logger.info("Error", {
+    body: JSON.stringify(req.body),
+    contentType: req.header("content-type"),
+    errorStack: err.stack,
+    method: req.method,
+    url: req.originalUrl
+  });
+  res.status(HTTPStatus.INTERNAL_SERVER_ERROR).send(err.message);
+  next();
+});
