@@ -16,9 +16,9 @@ const createPost = (body: any, t: test.Test): Promise<IPostResponse> => {
       .post(url)
       .send(body)
       .expect(HTTPStatus.CREATED)
+      .expect("Content-type", /^application\/json/)
       .end((err: Error, res: supertest.Response) => {
         if (err !== null) {
-          t.equal(res.text, null, "ayy");
           return reject(err);
         }
         t.equal("id" in res.body, true, "Id in response body");
@@ -38,28 +38,84 @@ test("Post creation endpoint Should return new post's id", (t: test.Test) => {
     });
 });
 
-test("Ping endpoint Should respond to standard ping", (t: test.Test) => {
-  const url = "/ping";
-  supertest(app)
-    .get(url)
-    .expect(HTTPStatus.OK)
-    .expect("Pong")
-    .end((err: Error) => {
-        t.equal(err, null, `GET ${url} err was not null`);
-        t.end();
+test("Ping endpoint Should return a post", (t: test.Test) => {
+  const body = { body: "Hello, world!" };
+  createPost(body, t)
+    .then((post) => {
+      const url = `/post/${post.id}`;
+      return new Promise((resolve, reject) => {
+        supertest(app)
+          .get(url)
+          .expect(HTTPStatus.OK)
+          .expect("Content-type", /^application\/json/)
+          .end((err: Error, res: supertest.Response) => {
+            if (err !== null) {
+              return reject(err);
+            }
+
+            t.equal(body.body, res.body.body, "Request and response bodies match");
+            resolve();
+          });
+      });
+    })
+    .then(() => t.end())
+    .catch((err) => {
+      t.equal(err, null, `err was not null`);
+      t.end();
     });
 });
 
-test("Json reflection Should return identical Json in response as provided by request", (t: test.Test) => {
-  const url = "/reflection";
-  const body = { greeting: "Hello, world!" };
-  supertest(app)
-    .post(url)
-    .send(body)
-    .expect(HTTPStatus.OK)
-    .end((err: Error, res: supertest.Response) => {
-        t.equal(err, null, `POST ${url} err was not null`);
-        t.equal(body.greeting, res.body.greeting, "Greetings in request and response match");
-        t.end();
+test("Ping endpoint Should delete a post", (t: test.Test) => {
+  const body = { body: "Hello, world!" };
+  createPost(body, t)
+    .then((post) => {
+      const url = `/post/${post.id}`;
+      return new Promise((resolve, reject) => {
+        supertest(app)
+          .delete(url)
+          .expect(HTTPStatus.OK)
+          .expect("Content-type", /^application\/json/)
+          .end((err: Error) => {
+            if (err !== null) {
+              return reject(err);
+            }
+
+            resolve();
+          });
+      });
+    })
+    .then(() => t.end())
+    .catch((err) => {
+      t.equal(err, null, `err was not null`);
+      t.end();
+    });
+});
+
+test("Ping endpoint Should update a post", (t: test.Test) => {
+  const body = { body: "Hello, world!" };
+  createPost(body, t)
+    .then((post) => {
+      const url = `/post/${post.id}`;
+      return new Promise((resolve, reject) => {
+        const newBody = { body: "Jello, world!" };
+        supertest(app)
+          .put(url)
+          .send(newBody)
+          .expect(HTTPStatus.OK)
+          .expect("Content-type", /^application\/json/)
+          .end((err: Error, res: supertest.Response) => {
+            if (err !== null) {
+              return reject(err);
+            }
+
+            t.equal(newBody.body, res.body.body, "Request and response bodies match");
+            resolve();
+          });
+      });
+    })
+    .then(() => t.end())
+    .catch((err) => {
+      t.equal(err, null, `err was not null`);
+      t.end();
     });
 });
