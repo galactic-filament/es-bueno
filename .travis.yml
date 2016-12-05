@@ -21,5 +21,6 @@ before_script:
 - npm run lint
 - npm run typings install
 - npm run build
+- mkdir ./log
 after_success:
 - test $TRAVIS_NODE_VERSION == "7" && git clean -xfd && ../bin/docker-push ihsw/es-bueno
