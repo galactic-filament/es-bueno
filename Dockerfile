@@ -25,10 +25,11 @@ COPY ./app $APP_DIR
 RUN mkdir ./log
 
 # build app
-RUN npm install \
+RUN chown -R $APP_USER:$APP_USER $APP_DIR \
+  && npm install \
   && npm run typings install \
   && npm run build
 
-CMD ["node", "./dist/index.js"]
+CMD ["node --no-deprecation", "./dist/index.js"]
 
 # CMD ["supervisord", "-n"]
