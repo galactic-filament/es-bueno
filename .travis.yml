@@ -21,6 +21,7 @@ before_install:
 - cd ./app
 before_script:
 - npm run lint
+- npm run typings install
 - npm run build
 after_success:
 - test $TRAVIS_NODE_VERSION == "7" && ../bin/docker-push ihsw/es-bueno

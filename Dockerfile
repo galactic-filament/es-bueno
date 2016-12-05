@@ -1,6 +1,6 @@
 FROM node
 
-EXPOSE 80
+EXPOSE 8080
 
 # apt-transport-https is for apt-get update failing after adding deb sources
 # RUN apt-get update -q \
@@ -10,17 +10,25 @@ EXPOSE 80
 #   && apt-get update -q \
 #   && apt-get install -yq netcat supervisor filebeat
 
+# add user
 ENV APP_USER es-bueno
 ENV APP_DIR /home/$APP_USER/app
 RUN useradd -ms /bin/bash $APP_USER
 USER $APP_USER
+
+# add app dir
 RUN mkdir $APP_DIR
 WORKDIR $APP_DIR
 COPY ./app $APP_DIR
+
+# add log dir
 RUN mkdir ./log
 
-CMD ["bash"]
+# build app
+RUN npm install \
+  && npm run typings install \
+  && npm run build
 
-# COPY ./container/files/ /
+CMD ["node", "./dist/index.js"]
 
 # CMD ["supervisord", "-n"]
