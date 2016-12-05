@@ -22,6 +22,4 @@ before_script:
 - npm run typings install
 - npm run build
 after_success:
-- test $TRAVIS_NODE_VERSION == "7"
-- git clean -xfd
-- ../bin/docker-push ihsw/es-bueno
+- test $TRAVIS_NODE_VERSION == "7" && git clean -xfd && ../bin/docker-push ihsw/es-bueno

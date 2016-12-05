@@ -25,9 +25,9 @@ COPY ./app $APP_DIR
 RUN mkdir ./log
 
 # build app
-RUN npm install \
-  && npm run typings install \
-  && npm run build
+RUN npm install --silent \
+  && npm run typings install --silent \
+  && npm run build --silent
 
 CMD ["node --no-deprecation", "./dist/index.js"]
 
