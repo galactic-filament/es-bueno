@@ -20,7 +20,7 @@ before_install:
 - psql -f ./db/container-files/docker-entrypoint-initdb.d/db.sql -U postgres
 - cd ./app
 before_script:
-- npm install --silent mocha
-- eslint .
+- npm run lint
+- npm run build
 after_success:
-- test $TRAVIS_NODE_VERSION == "5.1" && ../bin/docker-push ihsw/es-bueno
+- test $TRAVIS_NODE_VERSION == "7" && ../bin/docker-push ihsw/es-bueno
