@@ -49,7 +49,7 @@ export const getRouter = (sequelize: Sequelize.Connection, _: winston.LoggerInst
       })
       .then((post) => Post.findById(post.id))
       .then((post) => res.json(post.toJSON()))
-      .catch((err: Error) => next(err));
+      .catch((err) => next(err));
   });
 
   return router;
