@@ -21,4 +21,4 @@ RUN npm install --silent \
   && npm run typings install --silent \
   && npm run build --silent
 
-CMD ["node --no-deprecation", "./dist/index.js"]
+CMD ["node", "--no-deprecation", "./dist/index.js"]
