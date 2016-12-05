@@ -25,8 +25,7 @@ COPY ./app $APP_DIR
 RUN mkdir ./log
 
 # build app
-RUN chown -R $APP_USER:$APP_USER $APP_DIR \
-  && npm install \
+RUN npm install \
   && npm run typings install \
   && npm run build
 
