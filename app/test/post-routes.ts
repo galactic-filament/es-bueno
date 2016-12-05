@@ -38,7 +38,7 @@ test("Post creation endpoint Should return new post's id", (t: test.Test) => {
     });
 });
 
-test("Ping endpoint Should return a post", (t: test.Test) => {
+test("Post endpoint Should return a post", (t: test.Test) => {
   const body = { body: "Hello, world!" };
   createPost(body, t)
     .then((post) => {
@@ -91,7 +91,7 @@ test("Ping endpoint Should delete a post", (t: test.Test) => {
     });
 });
 
-test("Ping endpoint Should update a post", (t: test.Test) => {
+test("Post endpoint Should update a post", (t: test.Test) => {
   const body = { body: "Hello, world!" };
   createPost(body, t)
     .then((post) => {
