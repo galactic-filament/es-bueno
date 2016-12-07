@@ -6,13 +6,14 @@
   "scripts": {
     "build": "tsc --noUnusedParameters --noUnusedLocals && echo built",
     "lint": "tslint ./test/**/*.ts ./src/**/*.ts && echo linted",
-    "test": "tape ./dist/test/**/*.js | tap-spec",
+    "test": "ava --tape ./dist/test/**/*.js | tap-spec",
     "typings": "typings",
     "tap-spec": "tap-spec"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "async-middleware": "^1.0.1",
     "body-parser": "^1.15.2",
     "express": "^4.14.0",
     "express-async-wrap": "^1.0.0",
@@ -23,9 +24,9 @@
     "winston-logstash-udp": "^0.1.1"
   },
   "devDependencies": {
+    "ava": "^0.17.0",
     "supertest": "^2.0.1",
     "tap-spec": "^4.1.1",
-    "tape": "^4.6.3",
     "tslint": "^4.0.2",
     "typescript": "^2.0.10",
     "typings": "^2.0.0"

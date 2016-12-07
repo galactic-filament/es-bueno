@@ -5,7 +5,7 @@ import { json, ParsedAsJson } from "body-parser";
 import * as Sequelize from "sequelize";
 import * as HTTPStatus from "http-status";
 import * as winston from "winston";
-const wrap = require("express-async-wrap");
+import { wrap } from "async-middleware";
 
 interface Post {
   id?: number;
