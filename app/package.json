@@ -6,7 +6,7 @@
   "scripts": {
     "build": "tsc --noUnusedParameters --noUnusedLocals && echo built",
     "lint": "tslint ./test/**/*.ts ./src/**/*.ts && echo linted",
-    "test": "ava --tape ./dist/test/*.js ./dist/test/**/*.js",
+    "test": "ava --verbose ./dist/test/*.js ./dist/test/**/*.js",
     "typings": "typings"
   },
   "author": "",
