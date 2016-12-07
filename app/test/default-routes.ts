@@ -40,7 +40,7 @@ test("Ping endpoint Should respond to standard ping", async () => {
 
 test("Json reflection Should return identical Json in response as provided by request", (t) => {
   return new Promise<void>((resolve, reject) => {
-    const url = "/reflectionn";
+    const url = "/reflection";
     const body = { greeting: "Hello, world!" };
     supertest(app)
       .post(url)
