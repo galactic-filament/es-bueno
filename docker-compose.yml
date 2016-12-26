@@ -24,7 +24,7 @@ test-dev:
   # external_links:
     # - elk-server:log-egress
   volumes:
-    - ./app:/srv/app
+    - ./app:/home/es-bueno/app
 
 web:
   extends:
