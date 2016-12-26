@@ -32,4 +32,4 @@ web:
   links:
     - db:Db
   ports:
-    - 80:80
+    - 80:8080
