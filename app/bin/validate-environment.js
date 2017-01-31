@@ -25,5 +25,19 @@ const envVars = envVarPairs.reduce((envVars, value) => {
 
 // validating that the database port is accessible
 const dbPort = 5432
-const client = net.connect({ host: envVars['DATABASE_HOST'], port: dbPort })
-client.on('error', console.error)
+const client = net.connect({ host: envVars['DATABASE_HOST'], port: dbPort }, () => {
+  console.log('connected!')
+  process.exit(0)
+})
+client.on('error', (err) => {
+  if (err.code === 'ENOTFOUND') {
+    console.log(`Host ${envVars['DATABASE_HOST']} could not be found`)
+    process.exit(1)
+  } else if (err.code === 'ECONNREFUSED') {
+    console.log(`${envVars['DATABASE_HOST']} was not accessible at ${dbPort}`)
+    process.exit(1)
+  }
+
+  console.error(err)
+  process.exit(1)
+})
