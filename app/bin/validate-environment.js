@@ -1,5 +1,6 @@
 'use strict'
 const net = require('net')
+const fs = require('fs')
 
 // validating that env vars are available
 const envVarNames = [
@@ -26,8 +27,15 @@ const envVars = envVarPairs.reduce((envVars, value) => {
 // validating that the database port is accessible
 const dbPort = 5432
 const client = net.connect({ host: envVars['DATABASE_HOST'], port: dbPort }, () => {
-  console.log('connected!')
-  process.exit(0)
+  fs.stat(envVars['APP_LOG_DIR'], (err) => {
+    if (err) {
+      console.error(err)
+      console.log(`${envVars['APP_LOG_DIR']} log dir does not exist`)
+      process.exit(1)
+    }
+
+    process.exit(0)
+  })
 })
 client.on('error', (err) => {
   if (err.code === 'ENOTFOUND') {
