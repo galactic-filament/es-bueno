@@ -1,4 +1,4 @@
 #!/bin/bash
 
 node ./bin/validate-environment.js \
-  && npm test -s
+  && node ./dist/index.js
