@@ -13,7 +13,7 @@ import * as HTTPStatus from "http-status";
 export const app = express();
 
 // logging init
-const logFilepath = `${process.cwd()}/log/app.log`;
+const logFilepath = `${process.env["APP_LOG_DIR"]}/app.log`;
 const transports = [new winston.transports.File({ filename: logFilepath })];
 const logger = new winston.Logger({ transports: transports });
 
