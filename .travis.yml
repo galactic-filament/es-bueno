@@ -19,9 +19,8 @@ before_install:
 - psql -f ./db/container-files/docker-entrypoint-initdb.d/db.sql -U postgres
 - cd ./app
 before_script:
-- npm run lint
-- npm run typings install
-- npm run build
+- npm run -s lint
+- npm run -s build
 - mkdir $APP_LOG_DIR
 script: ./bin/run-tests
 after_success:
