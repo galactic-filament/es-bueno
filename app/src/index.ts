@@ -1,4 +1,4 @@
-import { app } from "./src/app";
+import { app } from "./app";
 import * as winston from "winston";
 
 const appPort = process.env["APP_PORT"];
@@ -8,5 +8,5 @@ process.on("SIGTERM", () => {
     server.close(() => {
         winston.info("Server closed, exiting");
         process.exit(0);
-    })
+    });
 });
