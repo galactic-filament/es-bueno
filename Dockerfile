@@ -14,7 +14,6 @@ RUN mkdir ./log
 
 # build app
 RUN npm install -s \
-  && npm run -s typings install \
   && npm run -s build
 
 CMD ["./bin/run-app"]
