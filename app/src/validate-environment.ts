@@ -29,7 +29,7 @@ const main = async () => {
     "APP_PORT",
     "APP_LOG_DIR",
     "DATABASE_HOST"
-  ]
+  ];
   const envVarPairs = envVarNames.map((v) => <[string, string]>[v, process.env[v]]);
   const missingEnvVarPairs = envVarPairs.filter(([, v]) => typeof v === "undefined" || v.length === 0);
   if (missingEnvVarPairs.length > 0) {
