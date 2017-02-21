@@ -5,7 +5,7 @@ import * as fs from "fs";
 const netConnect = (port: number, host: string): Promise<void> => {
   return new Promise<void>((resolve, reject) => {
     const client = net.connect(port, host, () => resolve());
-    client.on("err", reject);
+    client.on("error", reject);
   });
 };
 const fsStat = (path: string): Promise<void> => {
@@ -19,6 +19,11 @@ const fsStat = (path: string): Promise<void> => {
     });
   });
 };
+interface IEnvVars {
+  [key: string]: string;
+}
+interface IEnvVarPairs extends Array<[string, string]> {
+}
 
 const main = async () => {
   // validating that env vars are available
@@ -27,20 +32,12 @@ const main = async () => {
     "APP_LOG_DIR",
     "DATABASE_HOST"
   ]
-  const envVarPairs = envVarNames.map((v) => [v, String(process.env[v])]);
-  const missingEnvVarPairs = envVarPairs.filter(([, v]) => {
-    return typeof v === "undefined" || v.length === 0;
-  });
+  const envVarPairs: IEnvVarPairs = envVarNames.map((v) => <[string, string]>[v, process.env[v]]);
+  const missingEnvVarPairs = envVarPairs.filter(([, v]) => typeof v === "undefined" || v.length === 0);
   if (missingEnvVarPairs.length > 0) {
-    for (const [key] of missingEnvVarPairs) {
-      console.log(`${key} was missing`);
-    }
+    throw new Error(missingEnvVarPairs.map(([key]) => `${key} was missing`).join("\n"));
+  }
 
-    process.exit(1);
-  }
-  interface IEnvVars {
-    [key: string]: string;
-  }
   const envVars = envVarPairs.reduce((envVars, value) => {
     envVars[value[0]] = value[1];
     return envVars;
@@ -51,27 +48,29 @@ const main = async () => {
   try {
     await netConnect(dbPort, envVars["DATABASE_HOST"]);
   } catch (err) {
-    if (err["code"] === "ENOTFOUND") {
-      console.log(`Host ${envVars["DATABASE_HOST"]} could not be found`);
-      process.exit(1);
-    } else if (err["code"] === "ECONNREFUSED") {
-      console.log(`${envVars["DATABASE_HOST"]} was not accessible at ${dbPort}`);
-      process.exit(1);
+    switch (err["code"]) {
+      case "ENOTFOUND":
+        throw new Error(`Host ${envVars["DATABASE_HOST"]} could not be found`);
+      case "EHOSTUNREACH":
+        throw new Error(`Host ${envVars["DATABASE_HOST"]} could not be reached`);
+      case "ECONNREFUSED":
+        throw new Error(`Host ${envVars["DATABASE_HOST"]} was not accessible at ${dbPort}`);
+      default:
+        throw err;
     }
-
-    console.error(err);
-    process.exit(1);
   }
 
   // validating that the log dir exists
   try {
     await fsStat(envVars["APP_LOG_DIR"]);
   } catch (err) {
-    console.error(err);
-    console.log(`${envVars["APP_LOG_DIR"]} log dir does not exist`);
-    process.exit(1);
+    throw new Error(`${envVars["APP_LOG_DIR"]} log dir does not exist`);
   }
-
-  process.exit(0);
 };
-main();
+
+main()
+  .then(() => process.exit(0))
+  .catch((err) => {
+    console.error(err.message);
+    process.exit(1);
+  });
