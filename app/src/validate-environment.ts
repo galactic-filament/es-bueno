@@ -22,8 +22,6 @@ const fsStat = (path: string): Promise<void> => {
 interface IEnvVars {
   [key: string]: string;
 }
-interface IEnvVarPairs extends Array<[string, string]> {
-}
 
 const main = async () => {
   // validating that env vars are available
@@ -32,7 +30,7 @@ const main = async () => {
     "APP_LOG_DIR",
     "DATABASE_HOST"
   ]
-  const envVarPairs: IEnvVarPairs = envVarNames.map((v) => <[string, string]>[v, process.env[v]]);
+  const envVarPairs = envVarNames.map((v) => <[string, string]>[v, process.env[v]]);
   const missingEnvVarPairs = envVarPairs.filter(([, v]) => typeof v === "undefined" || v.length === 0);
   if (missingEnvVarPairs.length > 0) {
     throw new Error(missingEnvVarPairs.map(([key]) => `${key} was missing`).join("\n"));
