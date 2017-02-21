@@ -19,9 +19,6 @@ const fsStat = (path: string): Promise<void> => {
     });
   });
 };
-interface IEnvVars {
-  [key: string]: string;
-}
 
 const main = async () => {
   // validating that env vars are available
@@ -39,7 +36,7 @@ const main = async () => {
   const envVars = envVarPairs.reduce((envVars, value) => {
     envVars[value[0]] = value[1];
     return envVars;
-  }, <IEnvVars>{});
+  }, <{[key: string]: string}>{});
 
   // validating that the database port is accessible
   const dbPort = 5432;
