@@ -3,9 +3,6 @@ db:
 
 base:
   image: ihsw/es-bueno
-  environment:
-    - DATABASE_HOST=Db
-    - REQUEST_LOGGING=1
 test-base:
   extends:
     service: base
@@ -15,21 +12,26 @@ test:
   extends:
     service: test-base
   links:
-    - db:Db
+  - db:Db
+  environment:
+  - DATABASE_HOST=Db
+
 test-dev:
   extends:
     service: test-base
+  enviroment:
+  - DATABASE_HOST=Db
   links:
-    - db:Db
-  # external_links:
-    # - elk-server:log-egress
+  - db:Db
   volumes:
-    - ./app:/home/es-bueno/app
+  - ./app:/home/es-bueno/app
 
 web:
   extends:
     service: base
+  environment:
+  - DATABASE_HOST=Db
   links:
-    - db:Db
+  - db:Db
   ports:
-    - 80:8080
+  - 80:80
