@@ -19,7 +19,7 @@ test:
 test-dev:
   extends:
     service: test-base
-  enviroment:
+  environment:
   - DATABASE_HOST=Db
   links:
   - db:Db
