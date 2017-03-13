@@ -1,8 +1,10 @@
+sudo: required
 language: node_js
 node_js:
 - 7
 services:
 - postgresql
+- docker
 
 env:
   global:
@@ -20,3 +22,4 @@ before_script:
 script:
 - npm run -s lint
 - ./bin/run-tests
+- docker build -t $TRAVIS_REPO_SLUG:$TRAVIS_COMMIT .
