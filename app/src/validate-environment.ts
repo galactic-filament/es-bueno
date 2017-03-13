@@ -8,6 +8,7 @@ const netConnect = (port: number, host: string): Promise<void> => {
     client.on("error", reject);
   });
 };
+
 const fsStat = (path: string): Promise<void> => {
   return new Promise<void>((resolve, reject) => {
     fs.stat(path, (err) => {
