@@ -1,26 +1,21 @@
-sudo: required
 language: node_js
 node_js:
 - 7
 services:
 - postgresql
-- docker
 
 env:
-  global:
-  - DATABASE_HOST=localhost
-  - APP_PORT=80
-  - APP_LOG_DIR=`pwd`/log
-  - secure: NHmdGnj16+R8FfRny+qg/DADvamDrNilEbYEiYvngmECPjYZIGsBrjTBkrvj4gcNfDYoCWFJb1PGeQA3BAiEZ1iBudRETWdnsvPFu+tLo08zsHsO0xOc5OSxhm+stGALUDMBIjKvN9vcsIvbMNsove4kNwhYfb7OBhbCc7ctbPQlaDWqLvWikX3xx8cuBjeXt6fgAFQWz6Aq2+gx/sAeFN2hodyR1r7FANedU2PDHJkLD4QROhQP0YJdRy4nLHgKFbxJ4S2wqgaNMCS5lydb53FbfFAwSwhkOJJBSOGdGo//xS3rr9DRFjeMiBZmaEOMRXRbny0G7RD36ptGdmqu0QrdZshTJ2O5v+WFcSSrxoknc1CBp8VMYvXej5bnQoW02HFwEHMaThvLnkCbiX9yrHvQOiqzbFtI4sEZb64UMHjqdp8Vh6nWQup32QLYyeK9XnNL+mCovf5e7y4JoYoIfymwjKBUEbfly9xCZTKpJvKkUVLZCuOwPzsXY8CIeH8pWWR4tkIMOc5+bwe7jHdCoJhqfcmPDB9ibrhNxjiBfFMEqN/g1oyJ1WI9PIodcMl0A0Q69AkdSex6YGYRZviGdH6Y3E33M8E0LzXsLdyuNjAZrN0Sbu7FqIVEUr/YTMVkEpDq8ZKCBVHJhNbAeQEPQP6OdZg87gqQCxNjAaoB7uI=
-  - secure: ncjWby68yoirJe8Ts6nRhff/vsdmmNM1HksMrenqKwIddi2BkicqmS/0/1Zd2kUOiEkfoTLkKMwEhgb9p5c83jGAlINmVxsuKTRWjiTbODdNR3REi90/hGnaPJ5icroou+GBNpk8ILtCwpVhkFjGxgQf86FkOAfrhfNEhi3MAL3GDRK8EbWAsxoyR7SNmON/oWyFoD8nXb3mOwjAZ8MsOPst6XRR5n1pDWZE/xVdhOfneWq55j59I0Vw+3pnKFoRcKnpyofthgpTGQ73xkrqILwjz4xCtPxooV3UMYSm6vs6aek/vputPefK6zW8+SxznOj/xU65SkgpaGEEzouAjBHZP/Ft6oBu1jaVfyHl54AdnvYNFVPbftdODYuvieFxKOPr1z6jG308OTV9x8AnuJ157sC9hKqBKNTdpqXT4kQ9bIQGKByiLOJHotgaoZvYrsTbjoDtUQxn2O2W8x7LeTwz5pbuteGsWQN7Q8uPUHCQ1gXGIqKjX41SxTmkT9ivpe9G7jtb0jm8c1m3oZBGJVZn7BgAgvylBpqtRQViiiHUNi1p0Jac9d0dYIoLf3qamznsMA+yTYv3ZxYqK+9G4Okx9mzI2+dOwqdtnSH/VTwgaS/f65011bzgyEczqt/r7bDzXcDoSGu04WVFPg6+keW8gGEfwG45YKbR8t8o2do=
-  - secure: g1wZ+OvHWTisyARSI/0AVo6eBhP1uoCjMAqUVCDBCVPcmt1imUb1Csn5iLH14Wh+BWD9IQTr+B9mPG+v05tucU5FWUj2VEg6lwx7dXu8mftCAmWeIqYoFoV8GKy2WWn3vde2hZPlnuH9WkkPWRv7Q1MmWbqcajrd47lQBdnZoXRpLKlHI6fgkNrjlHqYszY3JC0k1EP6SmA5Dfh9d3WNqAldEa36FD+BQms59UZYdC/h+FgUo8DCHcJlg+a7IcNNE3GnS7wpyb7xpymo+NZBJ8DuYDpGtdhM0iaMguHDV+L+eXyry9AwDIoxlS8W2+fI2zIyi314HfaSNIKE4GrG03zuyhtVKykTGuki5TRhczjVF1amfjQUGoE8hPrrtcdHNVnGlNTT5pLtVrOHT6mnWFIdkmw+yNoA+EczLs3Lf2zis0zsfkEOBeU6rInUOs5R1BhWspVr2cFA9Q/c/S/6E64G8cN8zVLese91+sGxf0rScZ4V8ahOVcX3qkeoOW4S4oRTlsCVgvwptbBIQIxwiqdmH9Ax/v8cQ2PW6Qwp13BMSpLEdYLx5rb26iRMM3KLFLkMs3PrBr//gMlYxtHvFStjBEMvG1KL4YKVpNyb/eFCDRenqdnal2HyvDj3/he+MYYu7MPO2NdL0DJlBRwSNP1byI+q6nnCPpILkLLn4mE=
+- DATABASE_HOST=localhost
+- APP_PORT=80
+- APP_LOG_DIR=`pwd`/log
 before_install:
 - psql -f ./db/container-files/docker-entrypoint-initdb.d/db.sql -U postgres
 - cd ./app
-before_script:
-- npm run -s lint
+install:
+- npm install -s
 - npm run -s build
+before_script:
 - mkdir $APP_LOG_DIR
-script: ./bin/run-tests
-after_success:
-- test $TRAVIS_NODE_VERSION == "7" && git clean -xfd && ../bin/docker-push ihsw/es-bueno
+script:
+- npm run -s lint
+- ./bin/run-tests
