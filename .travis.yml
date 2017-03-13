@@ -22,4 +22,4 @@ before_script:
 script:
 - npm run -s lint
 - ./bin/run-tests
-- cd $TRAVIS_BUILD_DIR && docker build -t $TRAVIS_REPO_SLUG:$TRAVIS_COMMIT .
+- cd $TRAVIS_BUILD_DIR && docker build -t $TRAVIS_REPO_SLUG:$TRAVIS_COMMIT . && echo "built $(TRAVIS_REPO_SLUG)/$(TRAVIS_COMMIT)"
