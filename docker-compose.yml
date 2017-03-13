@@ -24,7 +24,7 @@ test-dev:
   links:
   - db:Db
   volumes:
-  - ./app:/home/es-bueno/app
+  - ./app:/srv/app
 
 web:
   extends:
