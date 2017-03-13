@@ -11,6 +11,7 @@ env:
   - DATABASE_HOST=localhost
   - APP_PORT=80
   - APP_LOG_DIR=`pwd`/log
+  - DOCKER_IMAGE_NAME=$TRAVIS_REPO_SLUG:$TRAVIS_COMMIT
 before_install:
 - psql -f ./db/container-files/docker-entrypoint-initdb.d/db.sql -U postgres
 - cd ./app
@@ -22,4 +23,4 @@ before_script:
 script:
 - npm run -s lint
 - ./bin/run-tests
-- cd $TRAVIS_BUILD_DIR && docker build -t $TRAVIS_REPO_SLUG:$TRAVIS_COMMIT . && echo "built $TRAVIS_REPO_SLUG/$TRAVIS_COMMIT"
+- cd $TRAVIS_BUILD_DIR && docker build -t $DOCKER_IMAGE_NAME . && echo "built $DOCKER_IMAGE_NAME"
