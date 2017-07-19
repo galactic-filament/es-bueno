@@ -22,56 +22,48 @@ export const getRouter = (sequelize: Sequelize.Sequelize, _: winston.LoggerInsta
       body: Sequelize.STRING
   });
 
-  router.post("/posts", json(), wrap(async (req: Request, res: Response, next: Function) => {
-    try {
-      const post = await Post.create({ body: req.body.body });
-      res.status(HTTPStatus.CREATED).json({ id: post.id });
-    } catch (err) {
-      next(err);
-    }
+  router.post("/posts", json(), wrap(async (req: Request, res: Response) => {
+    const post = await Post.create({ body: req.body.body });
+    res.status(HTTPStatus.CREATED).json({ id: post.id });
   }));
-  router.get("/post/:id", wrap(async (req: Request, res: Response, next: Function) => {
-    try {
-      const post = await Post.findById(req.params["id"]);
-      if (post === null) {
-        throw new Error(`Post ${req.params["id"]} could not be found!`);
-      }
+  router.get("/post/:id", wrap(async (req: Request, res: Response) => {
+    const post = await Post.findById(req.params["id"]);
+    if (post === null) {
+      res.status(HTTPStatus.NOT_FOUND).send();
 
-      res.json(post.toJSON());
-    } catch (err) {
-      next(err);
+      return;
     }
+
+    res.json(post.toJSON());
   }));
-  router.delete("/post/:id", wrap(async (req: Request, res: Response, next: Function) => {
-    try {
-      const post = await Post.findById(req.params["id"]);
-      if (post === null) {
-        throw new Error(`Post ${req.params["id"]} could not be found!`);
-      }
+  router.delete("/post/:id", wrap(async (req: Request, res: Response) => {
+    const post = await Post.findById(req.params["id"]);
+    if (post === null) {
+      res.status(HTTPStatus.NOT_FOUND).send();
 
-      await Post.destroy({ where: { id: post.id } });
-      res.json({});
-    } catch (err) {
-      next(err);
+      return;
     }
+
+    await Post.destroy({ where: { id: post.id } });
+    res.json({});
   }));
-  router.put("/post/:id", json(), wrap(async (req: Request, res: Response, next: Function) => {
-    try {
-      let post = await Post.findById(req.params["id"]);
-      if (post === null) {
-        throw new Error(`Post ${req.params["id"]} could not be found!`);
-      }
+  router.put("/post/:id", json(), wrap(async (req: Request, res: Response) => {
+    let post = await Post.findById(req.params["id"]);
+    if (post === null) {
+      res.status(HTTPStatus.NOT_FOUND).send();
 
-      await Post.update({ body: req.body.body }, { where: { id: post.id } });
-      post = await Post.findById(post.id);
-      if (post === null) {
-        throw new Error("Post after update could not be found!");
-      }
-
-      res.json(post.toJSON());
-    } catch (err) {
-      next(err);
+      return;
     }
+
+    await Post.update({ body: req.body.body }, { where: { id: post.id } });
+    post = await Post.findById(post.id);
+    if (post === null) {
+      res.status(HTTPStatus.INTERNAL_SERVER_ERROR).send("Post could not be found after updating!");
+
+      return;
+    }
+
+    res.json(post.toJSON());
   }));
 
   return router;
