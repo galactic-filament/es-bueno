@@ -6,7 +6,8 @@
   "scripts": {
     "build": "tsc && echo built",
     "lint": "tslint ./src/**/*.ts && echo linted",
-    "test": "nyc --reporter=html mocha ./dist/test/*.js ./dist/test/**/*.js"
+    "test": "mocha ./dist/test/*.js ./dist/test/**/*.js",
+    "test-coverage": "nyc --reporter=html test"
   },
   "author": "",
   "license": "ISC",
