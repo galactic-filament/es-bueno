@@ -33,6 +33,10 @@ export const getRouter = (sequelize: Sequelize.Sequelize, _: winston.LoggerInsta
   router.get("/post/:id", wrap(async (req: Request, res: Response, next: Function) => {
     try {
       const post = await Post.findById(req.params["id"]);
+      if (post === null) {
+        throw new Error(`Post ${req.params["id"]} could not be found!`);
+      }
+
       res.json(post.toJSON());
     } catch (err) {
       next(err);
@@ -41,6 +45,10 @@ export const getRouter = (sequelize: Sequelize.Sequelize, _: winston.LoggerInsta
   router.delete("/post/:id", wrap(async (req: Request, res: Response, next: Function) => {
     try {
       const post = await Post.findById(req.params["id"]);
+      if (post === null) {
+        throw new Error(`Post ${req.params["id"]} could not be found!`);
+      }
+
       await Post.destroy({ where: { id: post.id } });
       res.json({});
     } catch (err) {
@@ -50,8 +58,16 @@ export const getRouter = (sequelize: Sequelize.Sequelize, _: winston.LoggerInsta
   router.put("/post/:id", json(), wrap(async (req: Request, res: Response, next: Function) => {
     try {
       let post = await Post.findById(req.params["id"]);
+      if (post === null) {
+        throw new Error(`Post ${req.params["id"]} could not be found!`);
+      }
+
       await Post.update({ body: req.body.body }, { where: { id: post.id } });
       post = await Post.findById(post.id);
+      if (post === null) {
+        throw new Error("Post after update could not be found!");
+      }
+
       res.json(post.toJSON());
     } catch (err) {
       next(err);
