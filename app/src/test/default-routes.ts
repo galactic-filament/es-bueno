@@ -32,3 +32,10 @@ describe("Json reflection", () => {
     assert.deepEqual(res.body, body);
   });
 });
+
+describe("Internal error route", () => {
+  it("Should return 500 error", async () => {
+    const res = await request.get("/internal-error");
+    assert.equal(res.status, HTTPStatus.INTERNAL_SERVER_ERROR);
+  });
+});

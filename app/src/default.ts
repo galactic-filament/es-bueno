@@ -13,3 +13,6 @@ router.get("/ping", (_, res: Response) => {
 router.post("/reflection", json(), (req: Request, res: Response) => {
   res.set("Content-type", "application/json").send(req.body);
 });
+router.get("/internal-error", () => {
+  throw new Error("Test error!");
+});
