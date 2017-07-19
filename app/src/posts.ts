@@ -55,14 +55,8 @@ export const getRouter = (sequelize: Sequelize.Sequelize, _: winston.LoggerInsta
       return;
     }
 
-    await Post.update({ body: req.body.body }, { where: { id: post.id } });
-    post = await Post.findById(post.id);
-    if (post === null) {
-      res.status(HTTPStatus.INTERNAL_SERVER_ERROR).send("Post could not be found after updating!");
-
-      return;
-    }
-
+    post.set("body", req.body.body);
+    post.save();
     res.json(post.toJSON());
   }));
 
