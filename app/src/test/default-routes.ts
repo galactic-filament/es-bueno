@@ -1,58 +1,34 @@
-import { test } from "ava";
+import * as assert from "assert";
+
 import * as supertest from "supertest";
 import * as HTTPStatus from "http-status";
+
 import { app } from "../app";
 
-test("Homepage Should return standard greeting", async () => {
-  return new Promise<void>((resolve, reject) => {
-    const url = "/";
-    supertest(app)
-      .get(url)
-      .expect(HTTPStatus.OK)
-      .expect("Hello, world!")
-      .end((err: Error) => {
-        if (err) {
-          return reject(err);
-        }
+const request = supertest(app);
 
-        resolve();
-      });
+describe("Homepage", () => {
+  it("Should return standard greeting", async () => {
+    const res = await request.get("/");
+    assert.equal(res.status, HTTPStatus.OK);
+    assert.equal(res.text, "Hello, world!");
   });
 });
 
-test("Ping endpoint Should respond to standard ping", async () => {
-  return new Promise<void>((resolve, reject) => {
-    const url = "/ping";
-    supertest(app)
-      .get(url)
-      .expect(HTTPStatus.OK)
-      .expect("Pong")
-      .end((err: Error) => {
-        if (err) {
-          return reject(err);
-        }
-
-        resolve();
-      });
+describe("Ping endpoint", () => {
+  it("Should respond to standard ping", async () => {
+    const res = await request.get("/ping");
+    assert.equal(res.status, HTTPStatus.OK);
+    assert.equal(res.text, "Pong");
   });
 });
 
-test("Json reflection Should return identical Json in response as provided by request", (t) => {
-  return new Promise<void>((resolve, reject) => {
-    const url = "/reflection";
+describe("Json reflection", () => {
+  it("Should return identical Json in response as provided by request", async () => {
     const body = { greeting: "Hello, world!" };
-    supertest(app)
-      .post(url)
-      .send(body)
-      .expect(HTTPStatus.OK)
-      .expect("Content-type", /^application\/json/)
-      .end((err: Error, res: supertest.Response) => {
-        if (err) {
-          return reject(err);
-        }
-
-        t.deepEqual(body, res.body, "Greetings in request and response match");
-        resolve();
-      });
+    const res = await request.post("/reflection").send(body);
+    assert.equal(res.status, HTTPStatus.OK);
+    assert.notEqual(String(res.header["content-type"]).match(/^application\/json/), null);
+    assert.deepEqual(res.body, body);
   });
 });
