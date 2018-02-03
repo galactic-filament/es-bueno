@@ -7,7 +7,10 @@
     "build": "tsc && echo built",
     "lint": "tslint ./src/**/*.ts && echo linted",
     "test": "mocha ./dist/test/*.js ./dist/test/**/*.js",
-    "test-coverage": "nyc --reporter=html mocha ./dist/test/*.js ./dist/test/**/*.js"
+    "test-coverage": "nyc --reporter=lcov npm test",
+    "test-coverage-report": "nyc report",
+    "test-coverage-check": "nyc check-coverage --lines 95 --functions 75 --branches 95",
+    "coveralls-coverage": "nyc report --reporter=text-lcov | coveralls"
   },
   "author": "",
   "license": "ISC",
@@ -31,6 +34,7 @@
     "@types/supertest": "^2.0.0",
     "@types/winston": "^2.2.0",
     "ava": "^0.18.0",
+    "coveralls": "^3.0.0",
     "mocha": "^3.4.2",
     "nyc": "^11.0.3",
     "supertest": "^3.0.0",

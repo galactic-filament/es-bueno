@@ -2,6 +2,8 @@ sudo: required
 language: node_js
 node_js:
 - 7
+- 8
+- 9
 services:
 - postgresql
 - docker
@@ -22,5 +24,6 @@ before_script:
 - mkdir $APP_LOG_DIR
 script:
 - npm run -s lint
-- ./bin/run-tests
+- ./bin/run-tests-coverage && npm run -s coveralls-coverage
+- npm run -s test-coverage-report && npm run -s test-coverage-check
 - cd $TRAVIS_BUILD_DIR && docker build -t $DOCKER_IMAGE_NAME . && echo "built $DOCKER_IMAGE_NAME"
