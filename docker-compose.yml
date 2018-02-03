@@ -1,37 +1,44 @@
-db:
-  image: ihsw/es-bueno-db
+version: '2'
+services:
+  # resources
+  db:
+    build:
+      context: ./db
 
-base:
-  image: ihsw/es-bueno
-test-base:
-  extends:
-    service: base
-  command: ./bin/run-tests
+  # base images
+  base:
+    build:
+      context: .
+  test-base:
+    extends:
+      service: base
+    command: ./bin/run-tests
 
-test:
-  extends:
-    service: test-base
-  links:
-  - db:Db
-  environment:
-  - DATABASE_HOST=Db
+  # test services
+  test:
+    extends:
+      service: test-base
+    links:
+    - db:Db
+    environment:
+    - DATABASE_HOST=Db
+  test-dev:
+    extends:
+      service: test-base
+    environment:
+    - DATABASE_HOST=Db
+    links:
+    - db:Db
+    volumes:
+    - ./app:/srv/app
 
-test-dev:
-  extends:
-    service: test-base
-  environment:
-  - DATABASE_HOST=Db
-  links:
-  - db:Db
-  volumes:
-  - ./app:/srv/app
-
-web:
-  extends:
-    service: base
-  environment:
-  - DATABASE_HOST=Db
-  links:
-  - db:Db
-  ports:
-  - 80:80
+  # prod services
+  web:
+    extends:
+      service: base
+    environment:
+    - DATABASE_HOST=Db
+    links:
+    - db:Db
+    ports:
+    - 8080:80
