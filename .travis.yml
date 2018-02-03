@@ -1,8 +1,6 @@
 sudo: required
 language: node_js
 node_js:
-- 7
-- 8
 - 9
 services:
 - postgresql
@@ -21,7 +19,7 @@ install:
 - npm install -s
 - npm run -s build
 before_script:
-- mkdir $APP_LOG_DIR
+- mkdir -p $APP_LOG_DIR
 script:
 - npm run -s lint
 - ./bin/run-tests-coverage && npm run -s coveralls-coverage
