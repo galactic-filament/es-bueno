@@ -22,7 +22,7 @@ Test Coverage | [Istanbul](https://istanbul.js.org/)
 - [x] Unit test coverage reporting
 - [x] Automated testing using TravisCI
 - [x] Automated coverage reporting using Coveralls
-- [] CRUD routes for user management
-- [] Password encryption using bcrypt
-- [] Routes protected via HTTP authentication
-- [] Routes protected via ACLs
+- [ ] CRUD routes for user management
+- [ ] Password encryption using bcrypt
+- [ ] Routes protected via HTTP authentication
+- [ ] Routes protected via ACLs
