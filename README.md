@@ -17,7 +17,7 @@ Test Coverage | [Istanbul](https://istanbul.js.org/)
 - [x] Hello world routes
 - [x] CRUD routes for persisting posts
 - [x] Database access
-- [x] Request logging to files
+- [x] Request logging to /srv/app/log/app.log
 - [x] Unit tests
 - [x] Unit test coverage reporting
 - [x] Automated testing using TravisCI
@@ -26,3 +26,4 @@ Test Coverage | [Istanbul](https://istanbul.js.org/)
 - [ ] Password encryption using bcrypt
 - [ ] Routes protected via HTTP authentication
 - [ ] Routes protected via ACLs
+- [x] Validates environment (env vars, database host and port are accessible)
