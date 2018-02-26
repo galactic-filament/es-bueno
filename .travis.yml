@@ -11,7 +11,6 @@ env:
   - DATABASE_HOST=localhost
   - APP_PORT=80
   - APP_LOG_DIR=`pwd`/log
-  - DOCKER_IMAGE_NAME=$TRAVIS_REPO_SLUG:$TRAVIS_COMMIT
 before_install:
 - psql -f ./db/container-files/docker-entrypoint-initdb.d/db.sql -U postgres
 - cd ./app
@@ -24,4 +23,5 @@ script:
 - npm run -s lint
 - ./bin/run-tests-coverage && npm run -s coveralls-coverage
 - npm run -s test-coverage-report && npm run -s test-coverage-check
-- cd $TRAVIS_BUILD_DIR && docker build -t $DOCKER_IMAGE_NAME . && echo "built $DOCKER_IMAGE_NAME"
+- git clean -xfd && docker build -t ihsw/es-bueno ../
+- ../bin/docker-push ihsw/es-bueno
