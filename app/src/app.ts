@@ -1,5 +1,5 @@
 import express from "express";
-import { Request, Response } from "express";
+import { Request, Response, NextFunction } from "express";
 import * as bodyParser from "body-parser";
 import Sequelize from "sequelize";
 import * as winston from "winston";
@@ -17,7 +17,8 @@ const logFilepath = `${process.env["APP_LOG_DIR"]}/app.log`;
 const transports = [new winston.transports.File({ filename: logFilepath })];
 const logger = new winston.Logger({ transports: transports });
 
-app.use((req: Request, _: Response, next: Function) => {
+// request logging
+app.use((req: Request, _: Response, next: NextFunction) => {
   logger.info("Url hit", {
     body: JSON.stringify(req.body),
     contentType: req.header("content-type"),
@@ -42,7 +43,7 @@ app.use("/", defaultRouter);
 app.use("/", postsRouter(sequelize, logger));
 
 // error logging
-app.use((err: Error, req: Request, res: Response, next: Function) => {
+app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
   logger.info("Error", {
     body: JSON.stringify(req.body),
     contentType: req.header("content-type"),
