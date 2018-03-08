@@ -5,6 +5,7 @@ node_js:
 services:
 - postgresql
 - docker
+
 env:
   global:
   - DATABASE_HOST=localhost
@@ -12,6 +13,7 @@ env:
   - APP_LOG_DIR=`pwd`/log
   - secure: cTOCemBNJpu7iXKHLOY2ZcSxHbJPldi+uUOOovh5u/fonyKCeJloMZ9js0EhY60MMYV+5InrAlzDA8aElq6CG2jtBTxH8QVICwEgwYw5Wwm/50lagOgEP3CjPWrwi8r68fDepiZxg7Zsh93OKBhFxMxEaom+GO7rRr7JxAvZ85nM+yFMSkSyVDy1U10MQWblp3ORZa/teVMtPCXh+IQHaxk9WwKGadgdKsvjGcjXadphJ69te5RGF31hKAxACC4pJrclcI+MTyULu887EoXBOSx1yA2fW/hi3qKpfI6GWWManfcBKtX69OsmFLqB2u4aZSm9cUILlGNbag15Tq/JGllfNSC7fjdfyi2DfY1DvOCiDz8ejUq18ml/xf2n3VvO8RQoED455ewG0/fYS523QL+PYh/5x4r/L0y+WihF5YjYwi6S96cJB5cuyX6uFH7ul0bG/ii06cMREy6yKmkR+X2SM4/4vHuzf81vK3m+6EnqMG54pmmu3I/HuqS3EyUvw9U+5Acr6sI7zkLKH5EF/Gm6encqp2hb7i1kfvV7KIt/cyNTz6IbcCDHHXGrYwvXag773JTN8LEAXUqFD6Pv9UY4vU25uKwKoALeuzAb/uUYRwtBeh5AchBQT+1OCOytZglqNCmAOAWcDsiTOVmp7jWrUACyFODmhPeUm/OdSJc=
   - secure: Z4pwn07tqAgz1Qk09A3Q64v1vo5c0axd+d0qnyjuqSDVyfvDLETlLh94A5mpqrRN0jZVWwOT7SHU7Cljms9snq2cqYtT8s+Snb9ivEX5AYa4PlKF4kTuAlwonifxMGRgDOwkld/jwX6MT/tLACNY0mKfTOXlqXqx3dgwIS6xEGbi8ftsxq7PpjkCQjxWheEzPmGt8a7wrgEsHE9zeZe2igvEVGNbxRmMC8Nx9cNadI2lmmsG0aslQWL6eDeJ/hLJV0pY2NAyVyWxwqWkxkJZuI6hlI0/OHu5swMIt7WP3ejcwiqTNHlCNym0CcHAZz5jZfCXgC42HPPrPRwPUXiO5FJwvU7G2kfw97pMjUT9hiKwtC0XCdjY3nhUXaD5i7spYMbRbYNJp6ZhS5mxOiDSAIBW4dAb+PUwEojv/JE89+HxcyieKm+mXPGf7Fnm19R0cU+T68CIlEIOJZyH8H5uj9Fzl7sX0kOJljxAdAcmSixJLt3WDcmo1Pyvy+PbyV0rEvIVAW8ScecuRlcDdMTwpdEepshtF2MSgDqR4wIPD9vile0w+xzjq/Hd/r4Yrl8zvpVRO7SwrHXPfiTLEH08uoayT/m810J13zQzUwW6DajIvxCGJF5bsgBgf1Kel/2IaVg+lM5b28sP1ym4D9of7d3rUHBCBfifSpdsbwg9i2w=
+
 before_install:
 - psql -f ./db/container-files/docker-entrypoint-initdb.d/db.sql -U postgres
 - cd ./app
@@ -22,7 +24,7 @@ before_script:
 - mkdir -p $APP_LOG_DIR
 script:
 - npm run -s lint
-- "./bin/run-tests-coverage && npm run -s coveralls-coverage"
+- ./bin/run-tests-coverage && npm run -s coveralls-coverage
 - npm run -s test-coverage-report && npm run -s test-coverage-check
 - git clean -xfd && docker build -t ihsw/es-bueno ../
-- "../bin/docker-push ihsw/es-bueno"
+- ../bin/docker-push ihsw/es-bueno
