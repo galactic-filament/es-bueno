@@ -12,7 +12,7 @@ export interface UserInstance extends Instance<UserAttributes> {
 }
 
 export const createModel = (sequelize: Sequelize): SequelizeStatic.Model<UserInstance, UserAttributes> => {
-    return sequelize.define<UserInstance, UserAttributes>("User", {
+    return sequelize.define<UserInstance, UserAttributes>("user", {
         email: {type: STRING, allowNull: false}
     });
 };
