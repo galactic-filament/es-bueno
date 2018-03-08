@@ -6,6 +6,8 @@ import * as HTTPStatus from "http-status";
 import * as winston from "winston";
 import { wrap } from "async-middleware";
 
+import { createModel } from "./models/post";
+
 export interface Post {
   id?: number;
   body?: string;
@@ -17,10 +19,7 @@ export interface PostInstance extends Sequelize.Instance<Post> {
 
 export const getRouter = (sequelize: Sequelize.Sequelize, _: winston.LoggerInstance) => {
   const router = express.Router();
-
-  const Post = sequelize.define<PostInstance, Post>("post", {
-      body: Sequelize.STRING
-  });
+  const Post = createModel(sequelize);
 
   router.post("/posts", json(), wrap(async (req: Request, res: Response) => {
     const post = await Post.create({ body: req.body.body });
