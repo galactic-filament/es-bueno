@@ -1,12 +1,12 @@
-import * as express from "express";
+import express from "express";
 import { Request, Response } from "express";
 import * as bodyParser from "body-parser";
-import * as Sequelize from "sequelize";
-// import * as winston from "winston";
-import { router as defaultRouter } from "./default";
-import { getRouter as postsRouter } from "./posts";
+import Sequelize from "sequelize";
 import * as winston from "winston";
 import * as HTTPStatus from "http-status";
+
+import { router as defaultRouter } from "./default";
+import { getRouter as postsRouter } from "./posts";
 
 // express init
 export const app = express();

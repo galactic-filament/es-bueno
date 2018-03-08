@@ -1,6 +1,5 @@
 import * as assert from "assert";
-
-import * as supertest from "supertest";
+import supertest from "supertest";
 import * as HTTPStatus from "http-status";
 
 import { app } from "../app";

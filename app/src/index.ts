@@ -1,5 +1,6 @@
-import { app } from "./app";
 import * as winston from "winston";
+
+import { app } from "./app";
 
 const appPort = process.env["APP_PORT"];
 const server = app.listen(appPort, () => winston.info(`Listening on ${appPort}`));
