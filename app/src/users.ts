@@ -16,8 +16,10 @@ export const getRouter = (sequelize: Sequelize, _: winston.LoggerInstance) => {
     const email: string = req.body.email;
     const password: string = req.body.password;
     const user = await User.create({ email, password });
+
     res.status(HTTPStatus.CREATED).json({ id: user.id });
   }));
+
   router.get("/user/:id", wrap(async (req: Request, res: Response) => {
     const user = await User.findById(req.params["id"]);
     if (user === null) {
@@ -28,6 +30,7 @@ export const getRouter = (sequelize: Sequelize, _: winston.LoggerInstance) => {
 
     res.json(user.toJSON());
   }));
+
   router.delete("/user/:id", wrap(async (req: Request, res: Response) => {
     const post = await User.findById(req.params["id"]);
     if (post === null) {
@@ -39,6 +42,7 @@ export const getRouter = (sequelize: Sequelize, _: winston.LoggerInstance) => {
     await User.destroy({ where: { id: post.id } });
     res.json({});
   }));
+
   router.put("/user/:id", json(), wrap(async (req: Request, res: Response) => {
     let user = await User.findById(req.params["id"]);
     if (user === null) {
