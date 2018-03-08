@@ -51,7 +51,7 @@ export const getRouter = (sequelize: Sequelize, _: winston.LoggerInstance) => {
       return;
     }
 
-    user.set("body", req.body.body);
+    user.set("email", req.body.email);
     user.save();
     res.json(user.toJSON());
   }));

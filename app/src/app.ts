@@ -7,6 +7,7 @@ import * as HTTPStatus from "http-status";
 
 import { router as defaultRouter } from "./default";
 import { getRouter as postsRouter } from "./posts";
+import { getRouter as usersRouter } from "./users";
 
 // express init
 export const app = express();
@@ -41,6 +42,7 @@ const sequelize = new Sequelize("postgres", "postgres", "", <Sequelize.Options>{
 // route init
 app.use("/", defaultRouter);
 app.use("/", postsRouter(sequelize, logger));
+app.use("/", usersRouter(sequelize, logger));
 
 // error logging
 app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
