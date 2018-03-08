@@ -25,7 +25,11 @@ describe("Post creation endpoint", () => {
   const body = { body: "Hello, world!" };
 
   it("Should create a new post", async () => {
-    await createPost(body);
+    const res = await request.post("/posts").send(body);
+    assert.equal(res.status, HTTPStatus.CREATED);
+    assert.notEqual(String(res.header["content-type"]).match(/^application\/json/), null);
+    assert.ok("id" in res.body);
+    assert.equal(typeof res.body.id, "number");
   });
 
   it("Should return a post", async () => {
