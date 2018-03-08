@@ -7,7 +7,7 @@
     "build": "tsc && echo built",
     "build:w": "tsc -w",
     "lint": "tslint ./src/**/*.ts && echo linted",
-    "test": "mocha ./dist/test/*.js ./dist/test/**/*.js",
+    "test": "mocha --exit ./dist/test/*.js ./dist/test/**/*.js",
     "test:w": "mocha ./dist/test/*.js ./dist/test/**/*.js -w",
     "test-coverage": "nyc --reporter=lcov npm test",
     "test-coverage-report": "nyc report",
