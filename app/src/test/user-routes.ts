@@ -22,7 +22,7 @@ const createUser = async (body: any): Promise<IUserResponse> => {
 };
 
 describe("User creation endpoint", () => {
-  const body = { email: "a@a.a" };
+  const body = { email: "a@a.a", password: "test" };
 
   it("Should create a new user", async () => {
     const res = await request.post("/users").send(body);

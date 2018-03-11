@@ -5,6 +5,7 @@ import { Sequelize } from "sequelize";
 import * as HTTPStatus from "http-status";
 import * as winston from "winston";
 import { wrap } from "async-middleware";
+import * as bcrypt from "bcrypt";
 
 import { createModel } from "./models/user";
 
@@ -14,14 +15,14 @@ export const getRouter = (sequelize: Sequelize, _: winston.LoggerInstance) => {
 
   router.post("/users", json(), wrap(async (req: Request, res: Response) => {
     const email: string = req.body.email;
-    const password: string = req.body.password;
-    const user = await User.create({ email, password });
+    const password: string = await bcrypt.hash(req.body.password, 10);
+    const user = await User.create({ email, hashed_password: password });
 
     res.status(HTTPStatus.CREATED).json({ id: user.id });
   }));
 
   router.get("/user/:id", wrap(async (req: Request, res: Response) => {
-    const user = await User.findById(req.params["id"]);
+    const user = await User.scope("withoutPassword").findById(req.params["id"]);
     if (user === null) {
       res.status(HTTPStatus.NOT_FOUND).send();
 
@@ -44,7 +45,7 @@ export const getRouter = (sequelize: Sequelize, _: winston.LoggerInstance) => {
   }));
 
   router.put("/user/:id", json(), wrap(async (req: Request, res: Response) => {
-    let user = await User.findById(req.params["id"]);
+    const user = await User.scope("withoutPassword").findById(req.params["id"]);
     if (user === null) {
       res.status(HTTPStatus.NOT_FOUND).send();
 
