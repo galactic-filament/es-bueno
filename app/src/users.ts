@@ -49,7 +49,7 @@ export const getRouter = (sequelize: Sequelize, _: winston.LoggerInstance) => {
   }));
 
   router.get("/user/:id", wrap(async (req: Request, res: Response) => {
-    const user = await User.scope("withoutPassword").findById(req.params["id"]);
+    const user = await User.findById(req.params["id"]);
     if (user === null) {
       res.status(HTTPStatus.NOT_FOUND).send();
 
@@ -72,7 +72,7 @@ export const getRouter = (sequelize: Sequelize, _: winston.LoggerInstance) => {
   }));
 
   router.put("/user/:id", json(), wrap(async (req: Request, res: Response) => {
-    const user = await User.scope("withoutPassword").findById(req.params["id"]);
+    const user = await User.findById(req.params["id"]);
     if (user === null) {
       res.status(HTTPStatus.NOT_FOUND).send();
 

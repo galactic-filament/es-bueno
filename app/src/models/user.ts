@@ -15,12 +15,6 @@ export const createModel = (sequelize: Sequelize): SequelizeStatic.Model<UserIns
     return sequelize.define<UserInstance, UserAttributes>("user", {
         email: {type: STRING, allowNull: false},
         hashed_password: {type: STRING, allowNull: false}
-    }, {
-      scopes: {
-        withoutPassword: {
-          attributes: { exclude: ["hashed_password"] }
-        }
-      }
     });
 };
 
