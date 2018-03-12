@@ -12,8 +12,8 @@ SQL ORM | [Sequelize](http://docs.sequelizejs.com/)
 Logging | [Winston](https://www.npmjs.com/package/winston)
 Test Framework | [Mocha](https://mochajs.org/)
 Test Coverage | [Istanbul](https://istanbul.js.org/)
-Password encryption | NYI
-User authentication | NYI
+Password encryption | [bcrypt](https://github.com/kelektiv/node.bcrypt.js)
+User authentication | [Passport](https://github.com/jaredhanson/passport)
 Linting | [tslint](https://github.com/palantir/tslint)
 
 ## Features Implemented
