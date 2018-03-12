@@ -7,11 +7,11 @@
 
 Kind | Name
 --- | ---
-Web Framework | [Express](https://expressjs.com/)
+Web framework | [Express](https://expressjs.com/)
 SQL ORM | [Sequelize](http://docs.sequelizejs.com/)
 Logging | [Winston](https://www.npmjs.com/package/winston)
-Test Framework | [Mocha](https://mochajs.org/)
-Test Coverage | [Istanbul](https://istanbul.js.org/)
+Test framework | [Mocha](https://mochajs.org/)
+Test coverage | [Istanbul](https://istanbul.js.org/)
 Password encryption | [bcrypt](https://github.com/kelektiv/node.bcrypt.js)
 User authentication | [Passport](https://github.com/jaredhanson/passport)
 Linting | [tslint](https://github.com/palantir/tslint)
