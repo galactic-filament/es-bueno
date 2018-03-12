@@ -23,3 +23,10 @@ export const createModel = (sequelize: Sequelize): SequelizeStatic.Model<UserIns
       }
     });
 };
+
+export const withoutPassword = (user: UserInstance): UserAttributes => {
+  const data = user.toJSON();
+  delete data["hashed_password"];
+
+  return data;
+};

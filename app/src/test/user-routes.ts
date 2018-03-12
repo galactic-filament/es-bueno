@@ -6,7 +6,7 @@ import { app } from "../app";
 
 interface IUserResponse {
   id: number;
-  body: string;
+  email: string;
 }
 
 const request = supertest(app);
@@ -69,5 +69,36 @@ describe("User creation endpoint", () => {
   it("Should error on updating a user by invalid id", async () => {
     const res = await request.put("/user/-1");
     assert.equal(res.status, HTTPStatus.NOT_FOUND);
+  });
+
+  it("Should fail login when providing no data", async () => {
+    const res = await request.post("/login");
+    assert.equal(res.status, HTTPStatus.UNAUTHORIZED);
+    assert.deepEqual(res.body, {message: "Missing credentials"});
+  });
+
+  it("Should fail login when providing blank data", async () => {
+    const res = await request.post("/login").send({});
+    assert.equal(res.status, HTTPStatus.UNAUTHORIZED);
+    assert.deepEqual(res.body, {message: "Missing credentials"});
+  });
+
+  it("Should fail login when providing non-existent email", async () => {
+    const res = await request.post("/login").send({email: "a+non-existent@a.a", password: "test"});
+    assert.equal(res.status, HTTPStatus.UNAUTHORIZED);
+    assert.deepEqual(res.body, {message: "Invalid email!"});
+  });
+
+  it("Should fail login when providing an invalid password", async () => {
+    const user = await createUser({email: "a+invalid-password@a.a", password: "test"});
+    const res = await request.post("/login").send({email: user.email, password: "testttttt"});
+    assert.equal(res.status, HTTPStatus.UNAUTHORIZED);
+    assert.deepEqual(res.body, {message: "Invalid password!"});
+  });
+
+  it("Should login when providing valid credentials", async () => {
+    const user = await createUser({email: "a+valid-credentials@a.a", password: "test"});
+    const res = await request.post("/login").send({email: user.email, password: "test"});
+    assert.equal(res.status, HTTPStatus.OK);
   });
 });

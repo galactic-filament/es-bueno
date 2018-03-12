@@ -6,19 +6,46 @@ import * as HTTPStatus from "http-status";
 import * as winston from "winston";
 import { wrap } from "async-middleware";
 import * as bcrypt from "bcrypt";
+import passport from "passport";
+import { Strategy as LocalStrategy } from "passport-local";
 
-import { createModel } from "./models/user";
+import { createModel, UserInstance, withoutPassword } from "./models/user";
 
 export const getRouter = (sequelize: Sequelize, _: winston.LoggerInstance) => {
   const router = express.Router();
   const User = createModel(sequelize);
+
+  router.use(passport.initialize());
+  router.use(passport.session());
+  passport.use(new LocalStrategy(
+    {usernameField: "email", passwordField: "password"},
+    (email, password, done) => {
+      (async () => {
+        const user = await User.findOne({where: {email}});
+        if (user === null) {
+          done(null, false, {message: "Invalid email!"});
+
+          return;
+        }
+
+        const isMatching = await bcrypt.compare(password, user.get("hashed_password"));
+        if (isMatching === false) {
+          done(null, false, {message: "Invalid password!"});
+
+          return;
+        }
+
+        done(null, user);
+      })();
+    }
+  ));
 
   router.post("/users", json(), wrap(async (req: Request, res: Response) => {
     const email: string = req.body.email;
     const password: string = await bcrypt.hash(req.body.password, 10);
     const user = await User.create({ email, hashed_password: password });
 
-    res.status(HTTPStatus.CREATED).json({ id: user.id });
+    res.status(HTTPStatus.CREATED).json(withoutPassword(user));
   }));
 
   router.get("/user/:id", wrap(async (req: Request, res: Response) => {
@@ -29,7 +56,7 @@ export const getRouter = (sequelize: Sequelize, _: winston.LoggerInstance) => {
       return;
     }
 
-    res.json(user.toJSON());
+    res.json(withoutPassword(user));
   }));
 
   router.delete("/user/:id", wrap(async (req: Request, res: Response) => {
@@ -54,8 +81,24 @@ export const getRouter = (sequelize: Sequelize, _: winston.LoggerInstance) => {
 
     user.set("email", req.body.email);
     user.save();
-    res.json(user.toJSON());
+    res.json(withoutPassword(user));
   }));
+
+  router.post("/login", (req, res, next) => {
+    passport.authenticate("local", (err, user: UserInstance | false, info) => {
+      if (err) {
+        return next(err);
+      }
+
+      if (user === false) {
+        res.status(HTTPStatus.UNAUTHORIZED).send({message: info.message});
+
+        return;
+      }
+
+      res.send(withoutPassword(user));
+    })(req, res, next);
+  });
 
   return router;
 };
