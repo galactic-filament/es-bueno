@@ -5,12 +5,13 @@ import Sequelize from "sequelize";
 import * as winston from "winston";
 import * as HTTPStatus from "http-status";
 
+import { appendSessions } from "./session";
 import { router as defaultRouter } from "./routes/default";
 import { getRouter as postsRouter } from "./routes/posts";
 import { getRouter as usersRouter } from "./routes/users";
 
 // express init
-export const app = express();
+export let app = express();
 app.use(bodyParser.json());
 
 // logging init
@@ -39,6 +40,9 @@ const sequelize = new Sequelize("postgres", "postgres", "", <Sequelize.Options>{
   logging: false
 });
 
+// session init
+app = appendSessions(app, sequelize);
+
 // route init
 app.use("/", defaultRouter);
 app.use("/", postsRouter(sequelize, logger));
@@ -53,6 +57,7 @@ app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
     method: req.method,
     url: req.originalUrl
   });
+  console.log(err.message);
   res.status(HTTPStatus.INTERNAL_SERVER_ERROR).send(err.message);
   next();
 });

@@ -7,38 +7,12 @@ import * as winston from "winston";
 import { wrap } from "async-middleware";
 import * as bcrypt from "bcrypt";
 import passport from "passport";
-import { Strategy as LocalStrategy } from "passport-local";
 
 import { createModel, UserInstance, withoutPassword } from "../models/user";
 
 export const getRouter = (sequelize: Sequelize, _: winston.LoggerInstance) => {
   const router = express.Router();
   const User = createModel(sequelize);
-
-  router.use(passport.initialize());
-  router.use(passport.session());
-  passport.use(new LocalStrategy(
-    {usernameField: "email", passwordField: "password"},
-    (email, password, done) => {
-      (async () => {
-        const user = await User.findOne({where: {email}});
-        if (user === null) {
-          done(null, false, {message: "Invalid email!"});
-
-          return;
-        }
-
-        const isMatching = await bcrypt.compare(password, user.get("hashed_password"));
-        if (isMatching === false) {
-          done(null, false, {message: "Invalid password!"});
-
-          return;
-        }
-
-        done(null, user);
-      })();
-    }
-  ));
 
   router.post("/users", json(), wrap(async (req: Request, res: Response) => {
     const email: string = req.body.email;
