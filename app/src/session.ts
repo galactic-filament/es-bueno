@@ -1,8 +1,9 @@
+import cookieParser from "cookie-parser";
 import { Express } from "express";
 import { Sequelize } from "sequelize";
 import passport from "passport";
 import { Strategy as LocalStrategy } from "passport-local";
-import session from "express-session";
+import expressSession from "express-session";
 import * as bcrypt from "bcrypt";
 
 import { createModel } from "./models/user";
@@ -10,9 +11,6 @@ import { createModel } from "./models/user";
 export const appendSessions = (app: Express, sequelize: Sequelize): Express => {
   const User = createModel(sequelize);
 
-  app.use(session({secret: "es-bueno"}));
-  app.use(passport.initialize());
-  app.use(passport.session());
   passport.use(new LocalStrategy(
     {usernameField: "email", passwordField: "password"},
     (email, password, done) => {
@@ -35,6 +33,11 @@ export const appendSessions = (app: Express, sequelize: Sequelize): Express => {
       })();
     }
   ));
+
+  app.use(cookieParser("es-bueno"));
+  app.use(expressSession({secret: "es-bueno"}));
+  app.use(passport.initialize());
+  app.use(passport.session());
 
   return app;
 };
