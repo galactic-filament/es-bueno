@@ -9,7 +9,7 @@ import * as bcrypt from "bcrypt";
 import passport from "passport";
 import { Strategy as LocalStrategy } from "passport-local";
 
-import { createModel, UserInstance, withoutPassword } from "./models/user";
+import { createModel, UserInstance, withoutPassword } from "../models/user";
 
 export const getRouter = (sequelize: Sequelize, _: winston.LoggerInstance) => {
   const router = express.Router();

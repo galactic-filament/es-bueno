@@ -5,9 +5,9 @@ import Sequelize from "sequelize";
 import * as winston from "winston";
 import * as HTTPStatus from "http-status";
 
-import { router as defaultRouter } from "./default";
-import { getRouter as postsRouter } from "./posts";
-import { getRouter as usersRouter } from "./users";
+import { router as defaultRouter } from "./routes/default";
+import { getRouter as postsRouter } from "./routes/posts";
+import { getRouter as usersRouter } from "./routes/users";
 
 // express init
 export const app = express();
