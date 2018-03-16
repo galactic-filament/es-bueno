@@ -109,7 +109,7 @@ describe("User creation endpoint", () => {
     assert.equal(res.status, HTTPStatus.OK, "Log in success");
 
     const cookie = (Cookie.parse(res.get("set-cookie")[0])) as Cookie;
-    
+
     res = await (request.get("/user").set("Cookie", cookie.toString().split(";")[0]));
     assert.equal(res.status, HTTPStatus.OK, "Current user success");
     assert.equal(res.body.email, user.email);
