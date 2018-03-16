@@ -119,4 +119,9 @@ describe("User creation endpoint", () => {
     assert.equal(res.status, HTTPStatus.OK, "Current user success");
     assert.equal(res.body.email, user.email);
   });
+
+  it("Should fail when attepmting to view currently logged in user", async () => {
+    const res = await request.get("/user");
+    assert.equal(res.status, HTTPStatus.UNAUTHORIZED);
+  });
 });

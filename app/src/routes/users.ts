@@ -82,6 +82,13 @@ export const getRouter = (sequelize: Sequelize, _: winston.LoggerInstance) => {
   });
 
   router.get("/user", (req, res) => {
+    if (typeof req.user === "undefined") {
+      res.status(HTTPStatus.UNAUTHORIZED);
+      res.json({});
+
+      return;
+    }
+
     res.json(withoutPassword(req.user as UserInstance));
   });
 
