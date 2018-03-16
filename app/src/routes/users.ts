@@ -59,22 +59,14 @@ export const getRouter = (sequelize: Sequelize, _: winston.LoggerInstance) => {
   }));
 
   router.post("/login", (req, res, next) => {
-    passport.authenticate("local", (err, user: UserInstance | false, info) => {
-      if (err) {
-        return next(err);
-      }
-
+    passport.authenticate("local", (_, user: UserInstance | false, info) => {
       if (user === false) {
         res.status(HTTPStatus.UNAUTHORIZED).send({message: info.message});
 
         return;
       }
 
-      req.logIn(user, (err) => {
-        if (err) {
-          return next(err);
-        }
-
+      req.logIn(user, (_) => {
         res.status(HTTPStatus.OK);
         res.send(withoutPassword(req.user as UserInstance));
       });

@@ -37,13 +37,7 @@ export const appendSessions = (app: Express, sequelize: Sequelize): Express => {
   });
   passport.deserializeUser((id: string, done) => {
     (async () => {
-      const user = await User.findById(id);
-      if (user === null) {
-        done(new Error("Could not find user"));
-
-        return;
-      }
-
+      const user = (await User.findById(id)) as UserInstance;
       done(null, user);
     })();
   });
