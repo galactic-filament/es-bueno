@@ -70,8 +70,19 @@ export const getRouter = (sequelize: Sequelize, _: winston.LoggerInstance) => {
         return;
       }
 
-      res.send(withoutPassword(user));
+      req.logIn(user, (err) => {
+        if (err) {
+          return next(err);
+        }
+
+        res.status(HTTPStatus.OK);
+        res.send(withoutPassword(req.user as UserInstance));
+      });
     })(req, res, next);
+  });
+
+  router.get("/user", (req, res) => {
+    res.json(withoutPassword(req.user as UserInstance));
   });
 
   return router;

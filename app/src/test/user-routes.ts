@@ -1,6 +1,7 @@
 import * as assert from "assert";
 import supertest from "supertest";
 import * as HTTPStatus from "http-status";
+import { Cookie } from "tough-cookie";
 
 import { app } from "../app";
 
@@ -100,5 +101,22 @@ describe("User creation endpoint", () => {
     const user = await createUser({email: "a+valid-credentials@a.a", password: "test"});
     const res = await request.post("/login").send({email: user.email, password: "test"});
     assert.equal(res.status, HTTPStatus.OK);
+  });
+
+  it("Should return logged in user", async () => {
+    const user = await createUser({email: "a+logged-in@a.a", password: "test"});
+    let res = await request.post("/login").send({email: user.email, password: "test"});
+    assert.equal(res.status, HTTPStatus.OK, "Log in success");
+
+    const cookie = Cookie.parse(res.get("set-cookie")[0]);
+    if (!cookie) {
+      assert.fail("Cookie was not a cookie");
+
+      return;
+    }
+    
+    res = await (request.get("/user").set("Cookie", cookie.toString().split(";")[0]));
+    assert.equal(res.status, HTTPStatus.OK, "Current user success");
+    assert.equal(res.body.email, user.email);
   });
 });

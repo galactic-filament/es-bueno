@@ -1,4 +1,3 @@
-import cookieParser from "cookie-parser";
 import { Express } from "express";
 import { Sequelize } from "sequelize";
 import passport from "passport";
@@ -6,7 +5,7 @@ import { Strategy as LocalStrategy } from "passport-local";
 import expressSession from "express-session";
 import * as bcrypt from "bcrypt";
 
-import { createModel } from "./models/user";
+import { createModel, UserInstance } from "./models/user";
 
 export const appendSessions = (app: Express, sequelize: Sequelize): Express => {
   const User = createModel(sequelize);
@@ -33,9 +32,27 @@ export const appendSessions = (app: Express, sequelize: Sequelize): Express => {
       })();
     }
   ));
+  passport.serializeUser((user: UserInstance, done) => {
+    done(null, user.id);
+  });
+  passport.deserializeUser((id: string, done) => {
+    (async () => {
+      const user = await User.findById(id);
+      if (user === null) {
+        done(new Error("Could not find user"));
 
-  app.use(cookieParser("es-bueno"));
-  app.use(expressSession({secret: "es-bueno"}));
+        return;
+      }
+
+      done(null, user);
+    })();
+  });
+
+  app.use(expressSession({
+    secret: "es-bueno",
+    saveUninitialized: false,
+    resave: false
+  }));
   app.use(passport.initialize());
   app.use(passport.session());
 
