@@ -1,17 +1,27 @@
 import * as SequelizeStatic from "sequelize";
 import { Instance, Sequelize, STRING } from "sequelize";
 
-export interface PostAttributes {
-  id?: number;
-  body: string;
-}
+import { CommentModel } from "./comment";
+
+export type PostAttributes = {
+  id?: number
+  body: string
+};
 
 export interface PostInstance extends Instance<PostAttributes> {
   id: number;
 }
 
-export const createModel = (sequelize: Sequelize): SequelizeStatic.Model<PostInstance, PostAttributes> => {
+export type PostModel = SequelizeStatic.Model<PostInstance, PostAttributes>;
+
+export const createModel = (sequelize: Sequelize): PostModel => {
     return sequelize.define<PostInstance, PostAttributes>("post", {
         body: {type: STRING, allowNull: false}
     });
+};
+
+export const appendRelationships = (Post: PostModel, Comment: CommentModel): PostModel => {
+  Post.hasMany(Comment);
+
+  return Post;
 };

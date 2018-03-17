@@ -1,21 +1,31 @@
 import * as SequelizeStatic from "sequelize";
 import { Instance, Sequelize, STRING } from "sequelize";
 
-export interface UserAttributes {
-  id?: number;
-  email: string;
-  hashed_password: string;
-}
+import { CommentModel } from "./comment";
+
+export type UserAttributes = {
+  id?: number
+  email: string
+  hashed_password: string
+};
 
 export interface UserInstance extends Instance<UserAttributes> {
   id: number;
 }
 
-export const createModel = (sequelize: Sequelize): SequelizeStatic.Model<UserInstance, UserAttributes> => {
-    return sequelize.define<UserInstance, UserAttributes>("user", {
-        email: {type: STRING, allowNull: false},
-        hashed_password: {type: STRING, allowNull: false}
-    });
+export type UserModel = SequelizeStatic.Model<UserInstance, UserAttributes>;
+
+export const createModel = (sequelize: Sequelize): UserModel => {
+  return sequelize.define<UserInstance, UserAttributes>("user", {
+    email: {type: STRING, allowNull: false},
+    hashed_password: {type: STRING, allowNull: false}
+  });
+};
+
+export const appendRelationships = (User: UserModel, Comment: CommentModel): UserModel => {
+  User.hasMany(Comment);
+
+  return User;
 };
 
 export const withoutPassword = (user: UserInstance): UserAttributes => {

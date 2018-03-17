@@ -6,6 +6,7 @@ import * as winston from "winston";
 import * as HTTPStatus from "http-status";
 
 import { appendSessions } from "./session";
+import { createModels } from "./models";
 import { router as defaultRouter } from "./routes/default";
 import { getRouter as postsRouter } from "./routes/posts";
 import { getRouter as usersRouter } from "./routes/users";
@@ -39,14 +40,15 @@ const sequelize = new Sequelize("postgres", "postgres", "", <Sequelize.Options>{
   host: dbHost,
   logging: false
 });
+const models = createModels(sequelize);
 
 // session init
 app = appendSessions(app, sequelize);
 
 // route init
 app.use("/", defaultRouter);
-app.use("/", postsRouter(sequelize, logger));
-app.use("/", usersRouter(sequelize, logger));
+app.use("/", postsRouter(models.Post));
+app.use("/", usersRouter(models.User));
 
 // error logging
 app.use((err: Error, req: Request, res: Response, next: NextFunction) => {

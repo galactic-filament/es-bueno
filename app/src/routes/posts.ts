@@ -1,16 +1,13 @@
 import express = require("express");
 import { Request, Response } from "express";
 import { json } from "body-parser";
-import * as Sequelize from "sequelize";
 import * as HTTPStatus from "http-status";
-import * as winston from "winston";
 import { wrap } from "async-middleware";
 
-import { createModel } from "../models/post";
+import { PostModel } from "../models/post";
 
-export const getRouter = (sequelize: Sequelize.Sequelize, _: winston.LoggerInstance) => {
+export const getRouter = (Post: PostModel) => {
   const router = express.Router();
-  const Post = createModel(sequelize);
 
   router.post("/posts", json(), wrap(async (req: Request, res: Response) => {
     const post = await Post.create({ body: req.body.body });

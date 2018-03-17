@@ -1,18 +1,15 @@
 import express from "express";
 import { Request, Response } from "express";
 import { json } from "body-parser";
-import { Sequelize } from "sequelize";
 import * as HTTPStatus from "http-status";
-import * as winston from "winston";
 import { wrap } from "async-middleware";
 import * as bcrypt from "bcrypt";
 import passport from "passport";
 
-import { createModel, UserInstance, withoutPassword } from "../models/user";
+import { UserModel, UserInstance, withoutPassword } from "../models/user";
 
-export const getRouter = (sequelize: Sequelize, _: winston.LoggerInstance) => {
+export const getRouter = (User: UserModel) => {
   const router = express.Router();
-  const User = createModel(sequelize);
 
   router.post("/users", json(), wrap(async (req: Request, res: Response) => {
     const email: string = req.body.email;
