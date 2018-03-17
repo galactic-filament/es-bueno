@@ -43,9 +43,9 @@ export const appendSessions = (app: Express, sequelize: Sequelize): Express => {
   });
 
   app.use(expressSession({
-    secret: "es-bueno",
+    resave: false,
     saveUninitialized: false,
-    resave: false
+    secret: "es-bueno"
   }));
   app.use(passport.initialize());
   app.use(passport.session());
