@@ -8,15 +8,6 @@ import { wrap } from "async-middleware";
 
 import { createModel } from "../models/post";
 
-export interface Post {
-  id?: number;
-  body?: string;
-}
-
-export interface PostInstance extends Sequelize.Instance<Post> {
-  id: number;
-}
-
 export const getRouter = (sequelize: Sequelize.Sequelize, _: winston.LoggerInstance) => {
   const router = express.Router();
   const Post = createModel(sequelize);
