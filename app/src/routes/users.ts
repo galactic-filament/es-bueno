@@ -7,6 +7,7 @@ import * as bcrypt from "bcrypt";
 import passport from "passport";
 
 import { UserModel, UserInstance, withoutPassword } from "../models/user";
+import { requireUser } from "../lib/session";
 
 export const getRouter = (User: UserModel) => {
   const router = express.Router();
@@ -70,14 +71,7 @@ export const getRouter = (User: UserModel) => {
     })(req, res, next);
   });
 
-  router.get("/user", (req, res) => {
-    if (typeof req.user === "undefined") {
-      res.status(HTTPStatus.UNAUTHORIZED);
-      res.json({});
-
-      return;
-    }
-
+  router.get("/user", (req, res, next) => requireUser(req, res, next), (req, res) => {
     res.json(withoutPassword(req.user as UserInstance));
   });
 
