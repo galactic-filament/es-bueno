@@ -1,6 +1,5 @@
 import express from "express";
 import { Request, Response, NextFunction } from "express";
-import * as bodyParser from "body-parser";
 import Sequelize from "sequelize";
 import * as winston from "winston";
 import * as HTTPStatus from "http-status";
@@ -13,7 +12,7 @@ import { getRouter as usersRouter } from "../routes/users";
 
 // express init
 export let app = express();
-app.use(bodyParser.json());
+app.use(express.json());
 
 // logging init
 const logFilepath = `${process.env["APP_LOG_DIR"]}/app.log`;
