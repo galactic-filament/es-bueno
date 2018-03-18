@@ -59,7 +59,6 @@ app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
     method: req.method,
     url: req.originalUrl
   });
-  console.log(err.message);
   res.status(HTTPStatus.INTERNAL_SERVER_ERROR).send(err.message);
   next();
 });
