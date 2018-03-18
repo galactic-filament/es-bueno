@@ -43,7 +43,7 @@ const sequelize = new Sequelize("postgres", "postgres", "", <Sequelize.Options>{
 const models = createModels(sequelize);
 
 // session init
-app = appendSessions(app, sequelize);
+app = appendSessions(app, models.User);
 
 // route init
 app.use("/", defaultRouter);

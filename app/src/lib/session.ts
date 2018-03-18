@@ -1,15 +1,12 @@
 import { Express } from "express";
-import { Sequelize } from "sequelize";
 import passport from "passport";
 import { Strategy as LocalStrategy } from "passport-local";
 import expressSession from "express-session";
 import * as bcrypt from "bcrypt";
 
-import { createModel, UserInstance } from "../models/user";
+import { UserModel, UserInstance } from "../models/user";
 
-export const appendSessions = (app: Express, sequelize: Sequelize): Express => {
-  const User = createModel(sequelize);
-
+export const appendSessions = (app: Express, User: UserModel): Express => {
   passport.use(new LocalStrategy(
     {usernameField: "email", passwordField: "password"},
     (email, password, done) => {
