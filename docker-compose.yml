@@ -42,3 +42,14 @@ services:
     - db:Db
     ports:
     - 8080:80
+  web-dev:
+    extends:
+      service: base
+    environment:
+    - DATABASE_HOST=Db
+    links:
+    - db:Db
+    ports:
+    - 8080:80
+    volumes:
+    - ./app:/srv/app
