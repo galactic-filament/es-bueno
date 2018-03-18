@@ -70,9 +70,9 @@ export const getRouter = (User: UserModel) => {
     })(req, res, next);
   });
 
-  router.get("/user", (req, res, next) => requireUser(req, res, next), (req, res) => {
+  router.get("/user", (req, res, next) => requireUser(req, res, next), wrap(async (req, res) => {
     res.json(withoutPassword(req.user as UserInstance));
-  });
+  }));
 
   return router;
 };
