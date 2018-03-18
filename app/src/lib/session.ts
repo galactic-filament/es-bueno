@@ -1,4 +1,4 @@
-import { Express, Request, Response, NextFunction } from "express";
+import { Express, Request, Response, NextFunction, RequestHandler } from "express";
 import passport from "passport";
 import { Strategy as LocalStrategy } from "passport-local";
 import expressSession from "express-session";
@@ -51,7 +51,7 @@ export const appendSessions = (app: Express, User: UserModel): Express => {
   return app;
 };
 
-export const requireUser = (req: Request, res: Response, next: NextFunction) => {
+export const requireUser: RequestHandler = (req: Request, res: Response, next: NextFunction) => {
   if (typeof req.user === "undefined") {
     res.status(HTTPStatus.UNAUTHORIZED);
     res.json({});
