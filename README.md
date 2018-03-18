@@ -28,7 +28,7 @@ Linting | [tslint](https://github.com/palantir/tslint)
 - [x] Automated coverage reporting using Coveralls
 - [x] CRUD routes for user management
 - [x] Password encryption using bcrypt
-- [ ] Routes protected by cookie session
+- [x] Routes protected by cookie session
 - [ ] Entities linked to logged in user
 - [ ] Routes protected via HTTP authentication
 - [ ] Routes protected via API key
