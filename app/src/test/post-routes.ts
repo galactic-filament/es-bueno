@@ -2,7 +2,7 @@ import * as assert from "assert";
 import supertest from "supertest";
 import * as HTTPStatus from "http-status";
 
-import { app } from "../app";
+import { app } from "../lib/app";
 
 interface IPostResponse {
   id: number;

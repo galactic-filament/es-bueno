@@ -4,7 +4,7 @@ import * as HTTPStatus from "http-status";
 import { Cookie } from "tough-cookie";
 import { v4 as uuidv4 } from "uuid";
 
-import { app } from "../app";
+import { app } from "../lib/app";
 
 interface IUserResponse {
   id: number;
