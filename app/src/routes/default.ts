@@ -1,6 +1,5 @@
 import express = require("express");
 import { Request, Response } from "express";
-import { json } from "body-parser";
 
 export const router = express.Router();
 
@@ -10,7 +9,7 @@ router.get("/", (_, res: Response) => {
 router.get("/ping", (_, res: Response) => {
   res.set("Content-type", "text/plain").send("Pong");
 });
-router.post("/reflection", json(), (req: Request, res: Response) => {
+router.post("/reflection", (req: Request, res: Response) => {
   res.set("Content-type", "application/json").send(req.body);
 });
 router.get("/internal-error", () => {

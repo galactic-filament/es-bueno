@@ -1,6 +1,5 @@
 import express from "express";
 import { Request, Response } from "express";
-import { json } from "body-parser";
 import * as HTTPStatus from "http-status";
 import { wrap } from "async-middleware";
 import * as bcrypt from "bcrypt";
@@ -12,7 +11,7 @@ import { requireUser } from "../lib/session";
 export const getRouter = (User: UserModel) => {
   const router = express.Router();
 
-  router.post("/users", json(), wrap(async (req: Request, res: Response) => {
+  router.post("/users", wrap(async (req: Request, res: Response) => {
     const email: string = req.body.email;
     const password: string = await bcrypt.hash(req.body.password, 10);
     const user = await User.create({ email, hashed_password: password });
@@ -43,7 +42,7 @@ export const getRouter = (User: UserModel) => {
     res.json({});
   }));
 
-  router.put("/user/:id", json(), wrap(async (req: Request, res: Response) => {
+  router.put("/user/:id", wrap(async (req: Request, res: Response) => {
     const user = await User.findById(req.params["id"]);
     if (user === null) {
       res.status(HTTPStatus.NOT_FOUND).send();

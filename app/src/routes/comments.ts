@@ -1,6 +1,5 @@
 import express = require("express");
 import { Request, Response } from "express";
-import { json } from "body-parser";
 import * as HTTPStatus from "http-status";
 import { wrap } from "async-middleware";
 
@@ -9,7 +8,7 @@ import { CommentModel } from "../models/comment";
 export const getRouter = (Comment: CommentModel) => {
   const router = express.Router();
 
-  router.post("/comments", json(), wrap(async (req: Request, res: Response) => {
+  router.post("/comments", wrap(async (req: Request, res: Response) => {
     const comment = await Comment.create({ body: req.body.body });
 
     res.status(HTTPStatus.CREATED).json({ id: comment.id });
@@ -38,7 +37,7 @@ export const getRouter = (Comment: CommentModel) => {
     res.json({});
   }));
 
-  router.put("/comment/:id", json(), wrap(async (req: Request, res: Response) => {
+  router.put("/comment/:id", wrap(async (req: Request, res: Response) => {
     let comment = await Comment.findById(req.params["id"]);
     if (comment === null) {
       res.status(HTTPStatus.NOT_FOUND).send();
