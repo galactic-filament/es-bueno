@@ -2,6 +2,7 @@ import * as assert from "assert";
 import supertest from "supertest";
 import * as HTTPStatus from "http-status";
 import { Cookie } from "tough-cookie";
+import { v4 as uuidv4 } from "uuid";
 
 import { app } from "../app";
 
@@ -10,23 +11,32 @@ interface IUserResponse {
   email: string;
 }
 
+interface IUserRequest {
+  email: string;
+  password: string;
+}
+
 const request = supertest(app);
 
-const createUser = async (body: any): Promise<IUserResponse> => {
-  const res = await request.post("/users").send(body);
+const requestUser = (body: IUserRequest) => request.post("/users").send(body);
+
+const createUser = async (body: IUserRequest): Promise<IUserResponse> => {
+  const res = await requestUser(body);
   assert.equal(res.status, HTTPStatus.CREATED);
   assert.notEqual(String(res.header["content-type"]).match(/^application\/json/), null);
   assert.ok("id" in res.body);
   assert.ok(typeof res.body.id === "number");
+  assert.equal(res.body.email, body.email);
 
   return res.body;
 };
 
 describe("User creation endpoint", () => {
-  const body = { email: "a@a.a", password: "test" };
-
   it("Should create a new user", async () => {
-    const res = await request.post("/users").send(body);
+    const res = await requestUser({
+      email: `create-new-user+${uuidv4()}@test.com`,
+      password: "test"
+    });
     assert.equal(res.status, HTTPStatus.CREATED);
     assert.notEqual(String(res.header["content-type"]).match(/^application\/json/), null);
     assert.ok("id" in res.body);
@@ -34,11 +44,12 @@ describe("User creation endpoint", () => {
   });
 
   it("Should return a user", async () => {
-    const user = await createUser(body);
+    const user = await createUser({
+      email: `return-new-user+${uuidv4()}@test.com`,
+      password: "test"
+    });
     const res = await request.get(`/user/${user.id}`);
     assert.equal(res.status, HTTPStatus.OK);
-    assert.notEqual(String(res.header["content-type"]).match(/^application\/json/), null);
-    assert.equal(res.body.email, body.email);
   });
 
   it("Should error on fetching user by invalid id", async () => {
@@ -47,7 +58,10 @@ describe("User creation endpoint", () => {
   });
 
   it("Should delete a user", async () => {
-    const user = await createUser(body);
+    const user = await createUser({
+      email: `delete-user+${uuidv4()}@test.com`,
+      password: "test"
+    });
     const res = await request.delete(`/user/${user.id}`);
     assert.equal(res.status, HTTPStatus.OK);
     assert.notEqual(String(res.header["content-type"]).match(/^application\/json/), null);
@@ -59,12 +73,14 @@ describe("User creation endpoint", () => {
   });
 
   it("Should update a user", async () => {
-    const user = await createUser(body);
-    const newBody = { email: "b@b.b" };
+    const user = await createUser({
+      email: `update-user+${uuidv4()}@test.com`,
+      password: "test"
+    });
+    const newBody = { email: `update-user+${uuidv4()}@test.com` };
     const res = await request.put(`/user/${user.id}`).send(newBody);
     assert.equal(res.status, HTTPStatus.OK);
-    assert.notEqual(String(res.header["content-type"]).match(/^application\/json/), null);
-    assert.deepEqual(res.body.email, newBody.email);
+    assert.equal(res.body.email, newBody.email);
   });
 
   it("Should error on updating a user by invalid id", async () => {
@@ -91,20 +107,29 @@ describe("User creation endpoint", () => {
   });
 
   it("Should fail login when providing an invalid password", async () => {
-    const user = await createUser({email: "a+invalid-password@a.a", password: "test"});
+    const user = await createUser({
+      email: `invalid-password+${uuidv4()}@test.com`,
+      password: "test"
+    });
     const res = await request.post("/login").send({email: user.email, password: "testttttt"});
     assert.equal(res.status, HTTPStatus.UNAUTHORIZED);
     assert.deepEqual(res.body, {message: "Invalid password!"});
   });
 
   it("Should login when providing valid credentials", async () => {
-    const user = await createUser({email: "a+valid-credentials@a.a", password: "test"});
+    const user = await createUser({
+      email: `valid-credentials+${uuidv4()}@test.com`,
+      password: "test"
+    });
     const res = await request.post("/login").send({email: user.email, password: "test"});
     assert.equal(res.status, HTTPStatus.OK);
   });
 
   it("Should return logged in user", async () => {
-    const user = await createUser({email: "a+logged-in@a.a", password: "test"});
+    const user = await createUser({
+      email: `logged-in+${uuidv4()}@test.com`,
+      password: "test"
+    });
     let res = await request.post("/login").send({email: user.email, password: "test"});
     assert.equal(res.status, HTTPStatus.OK, "Log in success");
 
