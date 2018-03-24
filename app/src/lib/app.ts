@@ -38,7 +38,8 @@ const sequelize = new Sequelize("postgres", "postgres", "", <Sequelize.Options>{
   define: { timestamps: false },
   dialect: "postgres",
   host: dbHost,
-  logging: false
+  logging: false,
+  operatorsAliases: false
 });
 const models = createModels(sequelize);
 
