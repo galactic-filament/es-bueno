@@ -1,15 +1,15 @@
 CREATE TABLE Posts (
     id SERIAL PRIMARY KEY,
-    body VARCHAR(32)
+    body VARCHAR(32) NOT NULL
 );
 CREATE TABLE Users (
     id SERIAL PRIMARY KEY,
-    email VARCHAR(255) UNIQUE,
-    hashed_password VARCHAR(255)
+    email VARCHAR(255) NOT NULL UNIQUE,
+    hashed_password VARCHAR(255) NOT NULL
 );
 CREATE TABLE Comments (
     id SERIAL PRIMARY KEY,
-    user_id INTEGER REFERENCES Users (id),
-    post_id INTEGER REFERENCES Posts (id),
-    body VARCHAR(32)
+    user_id INTEGER NOT NULL REFERENCES Users (id),
+    post_id INTEGER NOT NULL REFERENCES Posts (id),
+    body VARCHAR(32) NOT NULL
 )
