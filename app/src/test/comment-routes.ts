@@ -5,14 +5,14 @@ import { Cookie } from "tough-cookie";
 import { v4 as uuidv4 } from "uuid";
 
 import { app } from "../lib/app";
-import { requestPost, IPostResponse } from "./post-routes";
-import { requestUser, IUserRequest, IUserResponse } from "./user-routes";
+import { requestPost, IPostRequest, IPostResponse } from "./post-routes";
+import { requestUser, IUserRequest } from "./user-routes";
 
 interface ICommentResponse {
   id: number;
   body: string;
-  post: IPostResponse;
-  user: IUserResponse;
+  post_id: number;
+  user_id: number;
 }
 
 interface ICommentRequest {
@@ -28,15 +28,35 @@ const requestComment = (postId: number, cookie: Cookie, body: ICommentRequest) =
     .send(body);
 };
 
-// const createComment = async (post: IPostResponse, cookie: Cookie, body: any): Promise<ICommentResponse> => {
-//   const res = await requestComment(post.id, cookie, body);
-//   assert.equal(res.status, HTTPStatus.CREATED);
-//   assert.notEqual(String(res.header["content-type"]).match(/^application\/json/), null);
-//   assert.ok("id" in res.body);
-//   assert.ok(typeof res.body.id === "number");
+const createComment = async (postBody: IPostRequest, userBody: IUserRequest, commentBody: ICommentRequest): Promise<ICommentResponse> => {
+  let res = await requestPost(postBody);
+  assert.equal(res.status, HTTPStatus.CREATED);
+  const post: IPostResponse = res.body;
 
-//   return res.body;
-// };
+  res = await requestUser(userBody);
+  assert.equal(res.status, HTTPStatus.CREATED);
+
+  res = await request.post("/login").send(userBody);
+  assert.equal(res.status, HTTPStatus.OK);
+  const cookie = (Cookie.parse(res.get("set-cookie")[0])) as Cookie;
+
+  res = await requestComment(post.id, cookie, commentBody);
+  assert.equal(res.status, HTTPStatus.CREATED);
+  const comment: ICommentResponse = res.body;
+  assert.notEqual(String(res.header["content-type"]).match(/^application\/json/), null);
+  assert.ok("id" in comment);
+  assert.equal(typeof comment.id, "number");
+
+  return res.body;
+};
+
+const createTestComment = async (userEmail: string, commentBody: ICommentRequest) => {
+  return createComment(
+    {body: "Hello, world!"},
+    {email: userEmail, password: "test"},
+    commentBody
+  );
+};
 
 describe("Comment creation endpoint", () => {
   it("Should create a new comment", async () => {
@@ -58,5 +78,17 @@ describe("Comment creation endpoint", () => {
     assert.notEqual(String(res.header["content-type"]).match(/^application\/json/), null);
     assert.ok("id" in comment);
     assert.equal(typeof comment.id, "number");
+  });
+
+  it("Should get a comment", async () => {
+    const comment = await createTestComment(
+      `get-comment+${uuidv4()}@test.com`,
+      {body: "Hello, world!"}
+    );
+
+    const res = await request.get(`/comment/${comment.id}`);
+    assert.equal(res.status, HTTPStatus.OK);
+    assert.equal(typeof res.body.post_id, "number");
+    assert.equal(typeof res.body.user_id, "number");
   });
 });

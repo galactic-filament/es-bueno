@@ -9,9 +9,9 @@ type PostModel = SequelizeStatic.Model<PostInstance, PostAttributes>;
 
 export type CommentAttributes = {
   id?: number
-  body: string,
-  post: PostInstance,
-  user: UserInstance
+  body: string
+  post_id: number
+  user_id: number
 };
 
 export interface CommentInstance extends Instance<CommentAttributes> {
@@ -27,8 +27,8 @@ export const createModel = (sequelize: Sequelize): CommentModel => {
 };
 
 export const appendRelationships = (Comment: CommentModel, User: UserModel, Post: PostModel): CommentModel => {
-  Comment.belongsTo(User);
-  Comment.belongsTo(Post);
+  Comment.belongsTo(User, {foreignKey: "user_id"});
+  Comment.belongsTo(Post, {foreignKey: "post_id"});
 
   return Comment;
 };

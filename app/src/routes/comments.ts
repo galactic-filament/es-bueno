@@ -21,11 +21,11 @@ export const getRouter = (Comment: CommentModel, Post: PostModel) => {
 
     const comment = await Comment.create({
       body: req.body.body,
-      post,
-      user: (req.user as UserInstance)
+      post_id: post.id,
+      user_id: (req.user as UserInstance).id
     });
 
-    res.status(HTTPStatus.CREATED).json({ id: comment.id });
+    res.status(HTTPStatus.CREATED).json(comment.toJSON());
   }));
 
   router.get("/comment/:id", wrap(async (req: Request, res: Response) => {

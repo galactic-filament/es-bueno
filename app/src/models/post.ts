@@ -21,7 +21,7 @@ export const createModel = (sequelize: Sequelize): PostModel => {
 };
 
 export const appendRelationships = (Post: PostModel, Comment: CommentModel): PostModel => {
-  Post.hasMany(Comment);
+  Post.hasMany(Comment, {foreignKey: "post_id"});
 
   return Post;
 };

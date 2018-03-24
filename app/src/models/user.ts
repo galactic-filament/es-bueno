@@ -23,7 +23,7 @@ export const createModel = (sequelize: Sequelize): UserModel => {
 };
 
 export const appendRelationships = (User: UserModel, Comment: CommentModel): UserModel => {
-  User.hasMany(Comment);
+  User.hasMany(Comment, {foreignKey: "user_id"});
 
   return User;
 };

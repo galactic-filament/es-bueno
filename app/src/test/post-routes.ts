@@ -9,7 +9,7 @@ export interface IPostResponse {
   body: string;
 }
 
-interface IPostRequest {
+export interface IPostRequest {
   body: string;
 }
 
