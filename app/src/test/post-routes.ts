@@ -1,79 +1,63 @@
-import * as assert from "assert";
-import supertest from "supertest";
+import test, { TestContext } from "ava";
 import * as HTTPStatus from "http-status";
 
-import { app } from "../lib/app";
+import { request, IPostResponse } from "../lib/test-helper";
 
-export interface IPostResponse {
-  id: number;
-  body: string;
-}
-
-export interface IPostRequest {
-  body: string;
-}
-
-const request = supertest(app);
-
-export const requestPost = (body: IPostRequest) => request.post("/posts").send(body);
-
-const createPost = async (body: any): Promise<IPostResponse> => {
+const createPost = async (t: TestContext, body: any): Promise<IPostResponse> => {
   const res = await request.post("/posts").send(body);
-  assert.equal(res.status, HTTPStatus.CREATED);
-  assert.notEqual(String(res.header["content-type"]).match(/^application\/json/), null);
-  assert.ok("id" in res.body);
-  assert.ok(typeof res.body.id === "number");
+  t.is(res.status, HTTPStatus.CREATED);
+  t.not(String(res.header["content-type"]).match(/^application\/json/), null);
+  t.true("id" in res.body);
+  t.true(typeof res.body.id === "number");
 
   return res.body;
 };
 
-describe("Post creation endpoint", () => {
-  const body = { body: "Hello, world!" };
+const body = { body: "Hello, world!" };
 
-  it("Should create a new post", async () => {
-    const res = await request.post("/posts").send(body);
-    assert.equal(res.status, HTTPStatus.CREATED);
-    assert.notEqual(String(res.header["content-type"]).match(/^application\/json/), null);
-    assert.ok("id" in res.body);
-    assert.equal(typeof res.body.id, "number");
-  });
+test("Post creation endpoint Should create a new post", async (t) => {
+  const res = await request.post("/posts").send(body);
+  t.is(res.status, HTTPStatus.CREATED);
+  t.not(String(res.header["content-type"]).match(/^application\/json/), null);
+  t.true("id" in res.body);
+  t.is(typeof res.body.id, "number");
+});
 
-  it("Should return a post", async () => {
-    const post = await createPost(body);
-    const res = await request.get(`/post/${post.id}`);
-    assert.equal(res.status, HTTPStatus.OK);
-    assert.notEqual(String(res.header["content-type"]).match(/^application\/json/), null);
-    assert.equal(res.body.body, body.body);
-  });
+test("Post creation endpoint Should return a post", async (t) => {
+  const post = await createPost(t, body);
+  const res = await request.get(`/post/${post.id}`);
+  t.is(res.status, HTTPStatus.OK);
+  t.not(String(res.header["content-type"]).match(/^application\/json/), null);
+  t.is(res.body.body, body.body);
+});
 
-  it("Should error on fetching post by invalid id", async () => {
-    const res = await request.get("/post/-1");
-    assert.equal(res.status, HTTPStatus.NOT_FOUND);
-  });
+test("Post creation endpoint Should error on fetching post by invalid id", async (t) => {
+  const res = await request.get("/post/-1");
+  t.is(res.status, HTTPStatus.NOT_FOUND);
+});
 
-  it("Should delete a post", async () => {
-    const post = await createPost(body);
-    const res = await request.delete(`/post/${post.id}`);
-    assert.equal(res.status, HTTPStatus.OK);
-    assert.notEqual(String(res.header["content-type"]).match(/^application\/json/), null);
-  });
+test("Post creation endpoint Should delete a post", async (t) => {
+  const post = await createPost(t, body);
+  const res = await request.delete(`/post/${post.id}`);
+  t.is(res.status, HTTPStatus.OK);
+  t.not(String(res.header["content-type"]).match(/^application\/json/), null);
+});
 
-  it("Should error on deleting post by invalid id", async () => {
-    const res = await request.delete("/post/-1");
-    assert.equal(res.status, HTTPStatus.NOT_FOUND);
-  });
+test("Post creation endpoint Should error on deleting post by invalid id", async (t) => {
+  const res = await request.delete("/post/-1");
+  t.is(res.status, HTTPStatus.NOT_FOUND);
+});
 
-  it("Should update a post", async () => {
-    const post = await createPost(body);
-    const newBody = { body: "Jello, world!" };
-    const res = await request.put(`/post/${post.id}`).send(newBody);
-    assert.equal(res.status, HTTPStatus.OK);
-    assert.notEqual(String(res.header["content-type"]).match(/^application\/json/), null);
-    assert.deepEqual(res.body.body, newBody.body);
-  });
+test("Post creation endpoint Should update a post", async (t) => {
+  const post = await createPost(t, body);
+  const newBody = { body: "Jello, world!" };
+  const res = await request.put(`/post/${post.id}`).send(newBody);
+  t.is(res.status, HTTPStatus.OK);
+  t.not(String(res.header["content-type"]).match(/^application\/json/), null);
+  t.deepEqual(res.body.body, newBody.body);
+});
 
-  it("Should error on updating a post by invalid id", async () => {
-    const res = await request.put("/post/-1");
-    assert.equal(res.status, HTTPStatus.NOT_FOUND);
-  });
+test("Post creation endpoint Should error on updating a post by invalid id", async (t) => {
+  const res = await request.put("/post/-1");
+  t.is(res.status, HTTPStatus.NOT_FOUND);
 });
