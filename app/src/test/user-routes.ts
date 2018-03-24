@@ -6,19 +6,19 @@ import { v4 as uuidv4 } from "uuid";
 
 import { app } from "../lib/app";
 
-interface IUserResponse {
+export interface IUserResponse {
   id: number;
   email: string;
 }
 
-interface IUserRequest {
+export interface IUserRequest {
   email: string;
   password: string;
 }
 
 const request = supertest(app);
 
-const requestUser = (body: IUserRequest) => request.post("/users").send(body);
+export const requestUser = (body: IUserRequest) => request.post("/users").send(body);
 
 const createUser = async (body: IUserRequest): Promise<IUserResponse> => {
   const res = await requestUser(body);

@@ -4,12 +4,18 @@ import * as HTTPStatus from "http-status";
 
 import { app } from "../lib/app";
 
-interface IPostResponse {
+export interface IPostResponse {
   id: number;
   body: string;
 }
 
+interface IPostRequest {
+  body: string;
+}
+
 const request = supertest(app);
+
+export const requestPost = (body: IPostRequest) => request.post("/posts").send(body);
 
 const createPost = async (body: any): Promise<IPostResponse> => {
   const res = await request.post("/posts").send(body);

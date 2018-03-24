@@ -9,6 +9,7 @@ import { createModels } from "../models";
 import { router as defaultRouter } from "../routes/default";
 import { getRouter as postsRouter } from "../routes/posts";
 import { getRouter as usersRouter } from "../routes/users";
+import { getRouter as commentsRouter } from "../routes/comments";
 
 // express init
 export let app = express();
@@ -48,6 +49,7 @@ app = appendSessions(app, models.User);
 app.use("/", defaultRouter);
 app.use("/", postsRouter(models.Post));
 app.use("/", usersRouter(models.User));
+app.use("/", commentsRouter(models.Comment, models.Post));
 
 // error logging
 app.use((err: Error, req: Request, res: Response, next: NextFunction) => {

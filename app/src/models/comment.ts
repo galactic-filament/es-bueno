@@ -9,7 +9,9 @@ type PostModel = SequelizeStatic.Model<PostInstance, PostAttributes>;
 
 export type CommentAttributes = {
   id?: number
-  body: string
+  body: string,
+  post: PostInstance,
+  user: UserInstance
 };
 
 export interface CommentInstance extends Instance<CommentAttributes> {

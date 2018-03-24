@@ -4,12 +4,26 @@ import * as HTTPStatus from "http-status";
 import { wrap } from "async-middleware";
 
 import { CommentModel } from "../models/comment";
+import { PostModel } from "../models/post";
+import { UserInstance } from "../models/user";
+import { requireUser } from "../lib/session";
 
-export const getRouter = (Comment: CommentModel) => {
+export const getRouter = (Comment: CommentModel, Post: PostModel) => {
   const router = express.Router();
 
-  router.post("/comments", wrap(async (req: Request, res: Response) => {
-    const comment = await Comment.create({ body: req.body.body });
+  router.post("/post/:id/comments", requireUser, wrap(async (req: Request, res: Response) => {
+    const post = await Post.findById(req.params["id"]);
+    if (post === null) {
+      res.status(HTTPStatus.NOT_FOUND).send();
+
+      return;
+    }
+
+    const comment = await Comment.create({
+      body: req.body.body,
+      post,
+      user: (req.user as UserInstance)
+    });
 
     res.status(HTTPStatus.CREATED).json({ id: comment.id });
   }));
