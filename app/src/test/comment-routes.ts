@@ -106,3 +106,19 @@ test("Comment creation endpoint Should update a comment body", async (t) => {
   t.is(updatedComment.post_id, comment.post_id);
   t.is(updatedComment.user_id, comment.user_id);
 });
+
+test("Comment creation endpoint Should fail on deleting by invalid id", async (t) => {
+  const res = await request.delete("/comment/-1");
+  t.is(res.status, HTTPStatus.NOT_FOUND);
+});
+
+test("Comment creation endpoint Should successfully delete", async (t) => {
+  const comment = await createTestComment(
+    t,
+    `delete-comment+${uuidv4()}@test.com`,
+    {body: "Hello, world!"}
+  );
+
+  const res = await request.delete(`/comment/${comment.id}`);
+  t.is(res.status, HTTPStatus.OK);
+});
