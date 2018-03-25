@@ -79,3 +79,30 @@ test("Comment creation endpoint Should get a comment", async (t) => {
   t.is(typeof res.body.post_id, "number");
   t.is(typeof res.body.user_id, "number");
 });
+
+test("Comment creation endpoint Should fail on fetching by invalid id", async (t) => {
+  const res = await request.get("/comment/-1");
+  t.is(res.status, HTTPStatus.NOT_FOUND);
+});
+
+test("Comment creation endpoint Should fail on updating by invalid id", async (t) => {
+  const res = await request.put("/comment/-1");
+  t.is(res.status, HTTPStatus.NOT_FOUND);
+});
+
+test("Comment creation endpoint Should update a comment body", async (t) => {
+  const comment = await createTestComment(
+    t,
+    `update-body+${uuidv4()}@test.com`,
+    {body: "Hello, world!"}
+  );
+
+  const newBody = "Jello, world!";
+  const res = await request.put(`/comment/${comment.id}`).send({body: newBody});
+  t.is(res.status, HTTPStatus.OK);
+  const updatedComment: ICommentResponse = res.body;
+  t.is(updatedComment.body, newBody);
+  t.is(updatedComment.id, comment.id);
+  t.is(updatedComment.post_id, comment.post_id);
+  t.is(updatedComment.user_id, comment.user_id);
+});
