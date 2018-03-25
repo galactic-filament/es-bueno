@@ -29,7 +29,7 @@ Linting | [tslint](https://github.com/palantir/tslint)
 - [x] CRUD routes for user management
 - [x] Password encryption using bcrypt
 - [x] Routes protected by cookie session
-- [ ] Entities linked to logged in user
+- [x] Entities linked to logged in user
 - [ ] Routes protected via HTTP authentication
 - [ ] Routes protected via API key
 - [x] Linting
