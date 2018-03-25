@@ -67,6 +67,19 @@ test("Comment creation endpoint Should create a new comment", async (t) => {
   t.is(typeof comment.id, "number");
 });
 
+test("Comment creation endpoint Should fail creating new comment on invalid post", async (t) => {
+  const userBody: IUserRequest = {email: `create-invalid-comment+${uuidv4()}@test.com`, password: "test"};
+  let res = await requestUser(userBody);
+  t.is(res.status, HTTPStatus.CREATED, "Creating user");
+
+  res = await request.post("/login").send(userBody);
+  t.is(res.status, HTTPStatus.OK, "Logging in");
+  const cookie = (Cookie.parse(res.get("set-cookie")[0])) as Cookie;
+
+  res = await requestComment(-1, cookie, {body: "Hello, world!"});
+  t.is(res.status, HTTPStatus.NOT_FOUND);
+});
+
 test("Comment creation endpoint Should get a comment", async (t) => {
   const comment = await createTestComment(
     t,
