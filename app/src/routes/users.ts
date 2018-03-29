@@ -31,14 +31,14 @@ export const getRouter = (User: UserModel) => {
   }));
 
   router.delete("/user/:id", wrap(async (req: Request, res: Response) => {
-    const post = await User.findById(req.params["id"]);
-    if (post === null) {
+    const user = await User.findById(req.params["id"]);
+    if (user === null) {
       res.status(HTTPStatus.NOT_FOUND).send();
 
       return;
     }
 
-    await User.destroy({ where: { id: post.id } });
+    await User.destroy({ where: { id: user.id } });
     res.json({});
   }));
 
